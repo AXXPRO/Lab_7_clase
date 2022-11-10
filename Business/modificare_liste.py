@@ -19,5 +19,5 @@ def adaugare_student_service(params):
     valid = ValidareStudent(student)
     valid.is_student_valid()
     valid.validare_id_student(lista_studenti)
-    adauga_student_repo(lista_studenti, student)
+    #adauga_student_repo(lista_studenti, student)
         

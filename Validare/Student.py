@@ -2,38 +2,41 @@ from Infrastructura.Studenti.domain import *
 
 class ValidareStudent:
     def __init__(self, Student):
-        self.nume = Student.get_nume()
-        self.id = Student.get_id()
-        
+        self.__nume = Student.get_nume()
+        self.__id = Student.get_id()
+    def get_id(self):
+        return self.__id
+    def get_nume(self):
+        return self.__nume
     def is_student_valid(self):
         """
         Functia ridica o eroare daca parametrii unui student nu sunt valizi, cu mesaj corespunzator
         """
-        err = ""
-        id = self.id
-        nume = self.nume
+        __err = ""
+        __id = self.get_id()
+        __nume = self.get_nume()
 
 
         try:
-            id = float(id)
-            id_copie = id
-            id = int(id)
-            if id < 0 or id_copie != id:
+            __id = float(__id)
+            __id_copie = __id
+            __id = int(__id)
+            if __id < 0 or __id_copie != __id:
                 raise ValueError
         except ValueError:
-            err+="Id invalid!\n"
+            __err+="Id invalid!\n"
 
         
-        if nume == "":
-            err+="Nume invalid!\n"
+        if __nume == "":
+            __err+="Nume invalid!\n"
         
-        if len(err) > 0:
-            raise ValueError(err)
+        if len(__err) > 0:
+            raise ValueError(__err)
 
 
     def validare_id_student(self, lista):
         """TO BE TESTED"""
-        id = self.id
+        __id = self.get_id()
         for student in lista:
-            if student.get_id() == id:
+            if student.get_id() == __id:
                 raise ValueError("Id deja existent!\n")

@@ -1,191 +1,100 @@
+from Erori.erori import RepoError
 from Infrastructura.Studenti.domain import *
 from Infrastructura.Discipline.domain import *
 from Validare.Disciplina import *
 from Validare.Student import *
 from Infrastructura.Studenti.repo import *
 from Infrastructura.Discipline.repo import *
-def test_domain_student():
-    """
-    Testele pentru functiile domain asociate student
-    """
-    id = 0
-    nume = "Carol"
-    primul_student = Student(id, nume)
 
-    assert primul_student.get_id() == 0
-    assert primul_student.get_nume() == "Carol"
+class Teste:
+    def __test_domain_student(self):
+        """
+        Testele pentru functiile domain asociate student
+        """
+        self.__id = 0
+        self.__nume = "Carol"
+        self.__primul_student = Student(self.__id, self.__nume)
 
-    nume_nou = "Gabi"
-    primul_student.set_nume(nume_nou)
-    assert primul_student.get_nume()== "Gabi"
+        assert self.__primul_student.get_id() == 0
+        assert self.__primul_student.get_nume() == "Carol"
 
-def test_domain_disciplina():
-    id=0
-    nume = "Matematica"
-    profesor = "Cotfas"
+        self.__nume_nou = "Gabi"
+        self.__primul_student.set_nume(self.__nume_nou)
+        assert self.__primul_student.get_nume()== "Gabi"
 
-    disciplina_prima = creaza_disciplina(id, nume, profesor)
-    assert get_id_disciplina(disciplina_prima) == 0
-    assert get_nume_disciplina(disciplina_prima) == "Matematica"
-    assert get_profesor_disciplina(disciplina_prima) == "Cotfas"
-
-    set_nume_disciplina(disciplina_prima, "Engleza")
-    set_profesor_disciplina(disciplina_prima, "Vulpe")
-    assert get_nume_disciplina(disciplina_prima) == "Engleza"
-    assert get_profesor_disciplina(disciplina_prima) == "Vulpe"
-
-
-def test_validare():
-    student = Student(-5, "")
-    try:
-        valid = ValidareStudent(student)
-        valid.is_student_valid()
-        assert False
-    except ValueError as err:
-        assert str(err) == "Id invalid!\nNume invalid!\n"
-
-    disciplina = creaza_disciplina(7.3, "", "")
-    try:
-        is_disciplina_valid(disciplina)
-        assert False
-    except ValueError as err:
-        assert str(err) == "Id invalid!\nNume invalid!\nProfesor invalid!\n"
-
-        
-    student = Student(0, "Marcel")
-    valid = ValidareStudent(student)
-    valid.is_student_valid()
-    disciplina = creaza_disciplina(1, "Mate", "Mircel")
-    is_disciplina_valid(disciplina)
-
-def test_repo_student():
-    
-    lista_studenti = []
-    student1 =Student(0, "Marcel")
-    student2 = Student(1, "Demian")
-    adauga_student_repo(lista_studenti, student1)
-    assert lista_studenti == [student1]
-
-    assert size_student_repo(lista_studenti) == 1
-
-    student_lau = Student(0, "wEzio")
-    modificare_id_student_repo(lista_studenti, student_lau.get_id(),student_lau)
-
-    print(student_lau.get_id(), student_lau.get_nume())
-    
-    assert student1.get_id() == student_lau.get_id()
-    assert student1.get_nume() == student_lau.get_nume()
-
-    assert lista_studenti == [student1]
-    assert lista_studenti[0].get_id() == student_lau.get_id()
-    assert lista_studenti[0].get_nume() == student_lau.get_nume()
-    adauga_student_repo(lista_studenti, student2)
-
-    assert lista_studenti == [student1,student2]
-    assert size_student_repo(lista_studenti) == 2
-    student_cautat = cauta_id_student_repo(lista_studenti, 0)
-
-    assert student_cautat.get_id() == student1.get_id()
-    assert student_cautat.get_nume() == student1.get_nume()
-
-    try:
-        student_cautat = cauta_id_student_repo(lista_studenti, 3)
-        assert False
-    except TypeError as err:
-        assert str(err) == "Nu exista niciun student cu acel id!\n"
-
-
-    student_modificat = Student(3, "Antonio")
-    modificare_id_student_repo(lista_studenti,student_modificat.get_id(),student_modificat)
-    assert lista_studenti ==[student1, student2]
-
-    #print(student1.get_nume(), student1.get_id())
-
-    student_modificat2 = Student(0, "Antonio")
-    modificare_id_student_repo(lista_studenti,student_modificat2.get_id(),student_modificat)
-    
-    # for studentt in lista_studenti:
-    #     print(studentt.get_nume(), studentt.get_id())
-
-    # print(student_modificat2.get_nume(), student_modificat2.get_id())
-    # print(student2.get_nume(), student2.get_id())
-    # print(student1.get_nume(), student1.get_id())
-    assert student1.get_id() == student_modificat2.get_id()
-    assert student1.get_nume() == student_modificat2.get_nume()
-    assert lista_studenti == [student1, student2]
-
-
-    delete_id_student_repo(lista_studenti, 2)
-    assert size_student_repo(lista_studenti) == 2
-
-    delete_id_student_repo(lista_studenti, 0)
-    assert lista_studenti == [student2]
-    delete_id_student_repo(lista_studenti, 1)
-    assert lista_studenti == []
+        self.__primul_student = Student(self.__id, self.__nume)
+        self.__al_doilea_student = Student(self.__primul_student.get_id(), self.__primul_student.get_nume())
+        assert self.__primul_student == self.__al_doilea_student
+        self.__al_doilea_student = Student(self.__primul_student.get_id()+1, self.__primul_student.get_nume())
+        assert (self.__primul_student == self.__al_doilea_student) == False
 
 
 
-def test_repo_disciplina():
-    
-    lista_disciplina = []
-    disciplina1 = creaza_disciplina(0, "Mate", "Cotfas")
-    disciplina2 = creaza_disciplina(1, "Romana", "Ghinea")
-    adauga_disciplina_repo(lista_disciplina, disciplina1)
-    assert lista_disciplina == [disciplina1]
+    def __test_validare_student(self):
 
-    assert size_disciplina_repo(lista_disciplina) == 1
+        self.__id_gresit = -5
+        self.__nume_gresit = ""
+        student = Student(self.__id_gresit, self.__nume_gresit)
+        try:
+            self.__valid = ValidareStudent(student)
+            self.__valid.is_student_valid()
+            assert False
+        except ValueError as err:
+            assert str(err) == "Id invalid!\nNume invalid!\n"
 
-    adauga_disciplina_repo(lista_disciplina, disciplina2)
-    assert lista_disciplina == [disciplina1,disciplina2]
-    assert size_disciplina_repo(lista_disciplina) == 2
-    disciplina_cautat = cauta_id_disciplina_repo(lista_disciplina, 0)
+            
+        self.__student = Student(0, "Marcel")
+        self.__valid = ValidareStudent(self.__student)
+        self.__valid.is_student_valid()
 
-    assert get_id_disciplina(disciplina_cautat) == get_id_disciplina(disciplina1)
-    assert get_nume_disciplina(disciplina_cautat) == get_nume_disciplina(disciplina1)
-    assert get_profesor_disciplina(disciplina_cautat) == get_profesor_disciplina(disciplina1)
+    def __test_repo_student(self):
+        self.__lista = []
+        self.__repo_student = StudentRepo(self.__lista)
+        self.__primul_student = Student(0, "Marc")
+        self.__al_doilea_student = Student(1, "Ionel")
+        assert self.__repo_student.size_student_repo() == 0
+        self.__repo_student.adauga_student_repo(self.__primul_student)
+        assert self.__repo_student.size_student_repo() == 1
+        self.__repo_student.adauga_student_repo(self.__al_doilea_student)
 
-    try:
-        disciplina_cautat = cauta_id_disciplina_repo(lista_disciplina, 3)
-        assert False
-    except TypeError as err:
-        assert str(err) == "Nu exista nicio disciplina cu acel id!\n"
+        self.__student_gasit = self.__repo_student.cauta_id_student_repo(0)
+        assert self.__student_gasit == self.__primul_student
+
+        try:
+            self.__student_gasit = self.__repo_student.cauta_id_student_repo(3)
+            assert False
+        except RepoError as err:
+            assert str(err) == "Eroare repo!\n"
+        self.__student_modificare = Student(3, "Mircel")
+        self.__repo_student.modificare_id_student_repo(self.__student_modificare.get_id(), self.__student_modificare)
+        assert self.__primul_student == self.__lista[0]
+        assert self.__al_doilea_student == self.__lista[1]
+
+        self.__student_modificare = Student(0, "Mircel")
+        self.__repo_student.modificare_id_student_repo(self.__student_modificare.get_id(), self.__student_modificare)
+        assert self.__student_modificare == self.__lista[0]
+        assert self.__al_doilea_student == self.__lista[1]
+
+        self.__repo_student.delete_id_student_repo(3)
+        assert self.__repo_student.size_student_repo() == 2
+        self.__repo_student.delete_id_student_repo(1)
+        assert self.__repo_student.size_student_repo() == 1
+        assert self.__lista[0] == self.__primul_student
+        self.__repo_student.delete_id_student_repo(0)
+        assert self.__repo_student.size_student_repo() == 0
 
 
-    disciplina_modificat = creaza_disciplina(3, "Info", "Torok")
-    modificare_id_disciplina_repo(lista_disciplina,get_id_disciplina(disciplina_modificat),disciplina_modificat)
-    assert lista_disciplina ==[disciplina1, disciplina2]
 
-    disciplina_modificat = creaza_disciplina(0, "Info", "Torok")
-    modificare_id_disciplina_repo(lista_disciplina,get_id_disciplina(disciplina_modificat),disciplina_modificat)
-
-    assert lista_disciplina ==[disciplina_modificat, disciplina2]
-
-    delete_id_disciplina_repo(lista_disciplina, 2)
-    assert size_disciplina_repo(lista_disciplina) == 2
-
-    delete_id_disciplina_repo(lista_disciplina, 0)
-    assert lista_disciplina == [disciplina2]
-    delete_id_disciplina_repo(lista_disciplina, 1)
-    assert lista_disciplina == []    
-
-def test_business_student():
-    """"""
+    def ruleaza_toate_testele(self):
+        """
+        Functia responsabila pentru a rula testele, apelata in main
+        """
+        self.__test_domain_student()
+        print("Teste domain student trecute!")
+        self.__test_validare_student()
+        print("Teste validare trecute!")
+        self.__test_repo_student()
+        print("Teste repo student trecute!")
+        input()
 
 
-
-def ruleaza_toate_testele():
-    """
-    Functia responsabila pentru a rula testele, apelata in main
-    """
-    test_domain_student()
-    print("Teste domain student trecute!")
-    test_domain_disciplina()
-    print("Teste domain disciplina trecute!")
-    test_validare()
-    print("Teste validare trecute!")
-    test_repo_student()
-    print("Teste repo student trecute!")
-    test_repo_disciplina()
-    print("Teste repo disciplina trecute!")
-    test_business_student()
-    print("Teste business student trecute!")
