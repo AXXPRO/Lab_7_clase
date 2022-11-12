@@ -1,53 +1,64 @@
 from os import system
-from Business.fara_modificare_lista import *
+from Business.control import *
 
-from Business.modificare_liste import *
 
-def print_ui():
-    system('cls')
-    print(">>>", end="")
 
-def validare_comanda(comanda, comenzi):
-    """
-    Functie responsabila pentru a decide daca o comanda este acceptata
-    return: True, daca comanda este valabila, False altfel
-    """
-    if comanda =="":
+class UI:
+
+    def __init__(self):
+        self.ui_main()
+
+    def __print_ui(self):
+        system('cls')
+        print(">>>", end="")
+
+    def __validare_comanda(self,__comanda, __comenzi):
+        """
+        Functie responsabila pentru a decide daca o comanda este acceptata
+        return: True, daca comanda este valabila, False altfel
+        """
+        if __comanda =="":
+            return False
+        if __comanda in __comenzi:
+            return True
         return False
-    if comanda in comenzi:
-        return True
-    return False
 
 
-def ui_main():
-    """Functie responsabila pentru cererea introducerii de la tastatura a comenzilor, si validarea lor"""
-    
-    comenzi = {
+    def ui_main(self):
+        """Functie responsabila pentru cererea introducerii de la tastatura a comenzilor, si validarea lor"""
+        
 
-        "adaugare_student": adaugare_student_service,
-        "afisare_studenti": afisare_student_service
+        
+        __comenzi = {
 
-    }
-    lista_studenti = []
-    lista_discipline = []
-    note = []
-    Rulare = True
-    while Rulare:
-        print_ui()
-        comanda = input()
-        if comanda.lower() == "exit":
-            Rulare = False
-        else:
+            "adaugare_student": Business.adaugare_student_service,
+            "afisare_studenti": Business.afisare_student_service
 
-            params = comanda.split()
-            if params == []:
-                params.append("nan")
-            params.append(lista_studenti)
-            params.append(lista_discipline)
-            params.append(note)
-            if validare_comanda(params[0],comenzi):
-                try:
-                    comenzi[params[0]](params[1:])
-                except ValueError as err:
-                    print(str(err))
+        }
+        __lista_studenti = []
+        __lista_discipline = []
+        __lista_note = []
+        __Rulare = True
+        while __Rulare:
+            self.__print_ui()
+            __comanda = input()
+            if __comanda.lower() == "exit":
+                __Rulare = False
+            else:
+
+                __params = __comanda.split()
+                if __params == []:
+                    __params.append("nan")
+                __params.append(__lista_studenti)
+                __params.append(__lista_discipline)
+                __params.append(__lista_note)
+                if self.__validare_comanda(__params[0],__comenzi):
+                    try:
+                        self.__EXECUTA = Business(__params[1:], __comenzi[__params[0]])                        
+                        
+                    except ValueError as err:
+                        print(str(err))
+                        input()
+                else: 
+                    print("Comanda inexistenta!")
                     input()

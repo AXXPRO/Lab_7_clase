@@ -1,3 +1,4 @@
+from Business.control import Business
 from Erori.erori import RepoError
 from Infrastructura.Studenti.domain import *
 from Infrastructura.Discipline.domain import *
@@ -32,6 +33,22 @@ class Teste:
 
     def __test_validare_student(self):
 
+        self.__id_valid = 0
+        self.__nume_valid = "Cram"
+
+        self.__primul_student_valid = Student(self.__id_valid, self.__nume_valid)
+        
+        self.__valid = ValidareStudent(self.__primul_student_valid)
+        self.__lista = []
+        self.__valid.validare_id_student(self.__lista)
+        self.__lista = [self.__primul_student_valid]
+        try:
+            self.__valid.validare_id_student(self.__lista)
+            assert False
+        except ValueError as err:
+            assert (str(err)=="Id deja existent!\n")
+
+        self._student_id = Student(0, "Marcel")
         self.__id_gresit = -5
         self.__nume_gresit = ""
         student = Student(self.__id_gresit, self.__nume_gresit)
@@ -83,6 +100,17 @@ class Teste:
         self.__repo_student.delete_id_student_repo(0)
         assert self.__repo_student.size_student_repo() == 0
 
+    def __test_control_student(self):
+        self.__lista_studenti = []
+        self.__lista_discipline = []
+        self.__lista_note = []
+        self.__student_control = Student(0, "Andrei")
+        self.__params = [0, "Andrei",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BUSINESS = Business(self.__params, Business.adaugare_student_service)
+        assert self.__lista_studenti[0] == self.__student_control 
+
+        
+
 
 
     def ruleaza_toate_testele(self):
@@ -95,6 +123,7 @@ class Teste:
         print("Teste validare trecute!")
         self.__test_repo_student()
         print("Teste repo student trecute!")
-        input()
-
+        self.__test_control_student()
+        print("Testele control student trecute!")
+        
 

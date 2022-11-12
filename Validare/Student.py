@@ -5,8 +5,14 @@ class ValidareStudent:
         self.__nume = Student.get_nume()
         self.__id = Student.get_id()
     def get_id(self):
+        """
+        returneaza id-ul studentului
+        """
         return self.__id
     def get_nume(self):
+        """
+        returneaza numele studentului
+        """
         return self.__nume
     def is_student_valid(self):
         """
@@ -35,7 +41,10 @@ class ValidareStudent:
 
 
     def validare_id_student(self, lista):
-        """TO BE TESTED"""
+        """
+        Valideaza daca id-ul studentului nu este existent deja in lista de studenti
+        params: lista - lista de studenti
+        TO BE TESTED"""
         __id = self.get_id()
         for student in lista:
             if student.get_id() == __id:
