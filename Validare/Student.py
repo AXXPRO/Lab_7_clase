@@ -20,21 +20,20 @@ class ValidareStudent:
         Functia ridica o eroare daca parametrii unui student nu sunt valizi, cu mesaj corespunzator
         """
         __err = ""
-        __id = self.get_id()
-        __nume = self.get_nume()
+
 
 
         try:
-            __id = float(__id)
-            __id_copie = __id
-            __id = int(__id)
-            if __id < 0 or __id_copie != __id:
+            self.__id = float(self.__id)
+            self.__id_copie = self.__id
+            self.__id = int(self.__id)
+            if self.__id < 0 or self.__id_copie != self.__id:
                 raise ValueError
         except ValueError:
             __err+="Id invalid!\n"
 
         
-        if __nume == "":
+        if self.__nume == "":
             __err+="Nume invalid!\n"
         
         if len(__err) > 0:
@@ -45,8 +44,8 @@ class ValidareStudent:
         """
         Valideaza daca id-ul studentului nu este existent deja in lista de studenti
         params: lista - lista de studenti
-        TO BE TESTED"""
-        __id = self.get_id()
+        """
+        
         for student in lista:
-            if student.get_id() == __id:
+            if student.get_id() == self.__id:
                 raise ValidationError("Id deja existent!\n")
