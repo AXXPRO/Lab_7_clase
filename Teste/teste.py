@@ -1,4 +1,5 @@
-from Business.control import Business
+
+from Business.control import BusinessStudent
 from Erori.erori import RepoError
 from Infrastructura.Studenti.domain import *
 from Infrastructura.Discipline.domain import *
@@ -106,14 +107,14 @@ class Teste:
         self.__lista_note = []
         self.__student_control = Student(0, "Andrei")
         self.__params = [0, "Andrei",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
-        self.__BUSINESS = Business(self.__params, Business.adaugare_student_service)
+        self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.adaugare_student_service)
         assert self.__lista_studenti[0] == self.__student_control
 
         self.__student_not_sters = Student(1, "Marc")
         self.__params = [1, "Marc", self.__lista_studenti, self.__lista_discipline, self.__lista_note]
-        self.__BUSINESS = Business(self.__params, Business.adaugare_student_service)
+        self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.adaugare_student_service)
         self.__params = [0 ,self.__lista_studenti, self.__lista_discipline, self.__lista_note]
-        self.__BUSINESS = Business(self.__params, Business.sterge_student_id_service)
+        self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.sterge_student_id_service)
         assert self.__lista_studenti[0] == self.__student_not_sters
 
 
@@ -121,12 +122,12 @@ class Teste:
         self.__student_marc = Student(0, "Marc")
         self.__student_modificat = Student(0, "Cram")
         self.__params = [0, "Marc", self.__lista_studenti, self.__lista_discipline, self.__lista_note]
-        self.__BUSINESS = Business(self.__params, Business.adaugare_student_service)
+        self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.adaugare_student_service)
         self.__params = [1, "Cram",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
-        self.__BUSINESS = Business(self.__params, Business.modifica_student_service)
+        self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.modifica_student_service)
         assert self.__lista_studenti[0] == self.__student_marc
         self.__params = [0, "Cram",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
-        self.__BUSINESS = Business(self.__params, Business.modifica_student_service)
+        self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.modifica_student_service)
         assert self.__lista_studenti[0] == self.__student_modificat
 
         

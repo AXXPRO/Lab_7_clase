@@ -4,7 +4,7 @@ from Infrastructura.Studenti.repo import StudentRepo
 from Validare.Student import ValidareStudent
 
 
-class Business:
+class BusinessStudent:
     def __init__(self,params, COMANDA):
         """
         Constructorul functiilor business
@@ -21,29 +21,8 @@ class Business:
        
     
 
-    def __id_pentru_afisare(self, student):
-        """
-        returneaza id-ul lui student
-        """
-        return student.get_id()
-    def afisare_student_service(self):
-        """
-        Functia afiseazatoti studentii din lista_studenti
-        """
-    
-        if self.__lista_studenti == []:
-            print("Niciun student in lista!")
-            input()
-            return
-        
-        #FOR MY OCD :
 
-        self.__lista_studenti.sort(key = self.__id_pentru_afisare)
 
-        for __student in self.__lista_studenti:
-            print(__student.get_id(), __student.get_nume())
-
-        input()
     def sterge_student_id_service(self):
         """
         Functia sterge din lista de studenti studentul cu id-ul id
@@ -71,7 +50,7 @@ class Business:
         
         self.__REPO.adauga_student_repo(self.__student)
 
-        
+
     def modifica_student_service(self):
         """
         Funcita va modifca studentul cu id-ul id, cu un student dat de utilizator
@@ -81,16 +60,3 @@ class Business:
         self.__id = self.__params[0]
         self.__nume = self.__params[1]
         self.__REPO.modificare_id_student_repo(self.__id, Student(self.__id, self.__nume))
-    def cauta_student_id_service(self):
-        """
-        Va afisa numele studentului cu id-ul dat, sau va afisa ca nu exista acel id
-        """
-
-        if len(self.__params) !=1:
-            raise ParamsError("Numar de parametrii invalid!")
-        self.__id = self.__params[0]
-
-        self.__student = self.__REPO.cauta_id_student_repo(self.__id)
-
-        print("Studentul cu id-ul",self.__id, "este", self.__student.get_nume())
-        input()
