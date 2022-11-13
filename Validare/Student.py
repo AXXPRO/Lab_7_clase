@@ -1,3 +1,4 @@
+from Erori.erori import ValidationError
 from Infrastructura.Studenti.domain import *
 
 class ValidareStudent:
@@ -37,7 +38,7 @@ class ValidareStudent:
             __err+="Nume invalid!\n"
         
         if len(__err) > 0:
-            raise ValueError(__err)
+            raise ValidationError(__err)
 
 
     def validare_id_student(self, lista):
@@ -48,4 +49,4 @@ class ValidareStudent:
         __id = self.get_id()
         for student in lista:
             if student.get_id() == __id:
-                raise ValueError("Id deja existent!\n")
+                raise ValidationError("Id deja existent!\n")

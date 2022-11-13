@@ -45,7 +45,7 @@ class Teste:
         try:
             self.__valid.validare_id_student(self.__lista)
             assert False
-        except ValueError as err:
+        except ValidationError as err:
             assert (str(err)=="Id deja existent!\n")
 
         self._student_id = Student(0, "Marcel")
@@ -56,7 +56,7 @@ class Teste:
             self.__valid = ValidareStudent(student)
             self.__valid.is_student_valid()
             assert False
-        except ValueError as err:
+        except ValidationError as err:
             assert str(err) == "Id invalid!\nNume invalid!\n"
 
             
@@ -81,7 +81,7 @@ class Teste:
             self.__student_gasit = self.__repo_student.cauta_id_student_repo(3)
             assert False
         except RepoError as err:
-            assert str(err) == "Eroare repo!\n"
+            assert str(err) == "Eroare repo: Student inexistent!\n"
         self.__student_modificare = Student(3, "Mircel")
         self.__repo_student.modificare_id_student_repo(self.__student_modificare.get_id(), self.__student_modificare)
         assert self.__primul_student == self.__lista[0]
@@ -107,9 +107,32 @@ class Teste:
         self.__student_control = Student(0, "Andrei")
         self.__params = [0, "Andrei",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
         self.__BUSINESS = Business(self.__params, Business.adaugare_student_service)
-        assert self.__lista_studenti[0] == self.__student_control 
+        assert self.__lista_studenti[0] == self.__student_control
+
+        self.__student_not_sters = Student(1, "Marc")
+        self.__params = [1, "Marc", self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BUSINESS = Business(self.__params, Business.adaugare_student_service)
+        self.__params = [0 ,self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BUSINESS = Business(self.__params, Business.sterge_student_id_service)
+        assert self.__lista_studenti[0] == self.__student_not_sters
+
+
+        self.__lista_studenti =[]
+        self.__student_marc = Student(0, "Marc")
+        self.__student_modificat = Student(0, "Cram")
+        self.__params = [0, "Marc", self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BUSINESS = Business(self.__params, Business.adaugare_student_service)
+        self.__params = [1, "Cram",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BUSINESS = Business(self.__params, Business.modifica_student_service)
+        assert self.__lista_studenti[0] == self.__student_marc
+        self.__params = [0, "Cram",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BUSINESS = Business(self.__params, Business.modifica_student_service)
+        assert self.__lista_studenti[0] == self.__student_modificat
 
         
+
+
+
 
 
 

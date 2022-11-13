@@ -40,7 +40,7 @@ class StudentRepo():
         for __student in self.__lista:
             if __student.get_id() == id:
                 return __student
-        raise RepoError("Eroare repo!\n")
+        raise RepoError("Eroare repo: Student inexistent!\n")
 
     def modificare_id_student_repo(self, id, student_change):
         """
