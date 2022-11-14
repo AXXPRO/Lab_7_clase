@@ -26,11 +26,12 @@ class ValidareDisciplina:
         """
         __err = ""
        
+        self.__id_de_testat = self.__id
         try:
-            self.__id = float(self.__id)
-            self.__id_copie = self.__id
-            self.__id = int(self.__id)
-            if self.__id < 0 or self.__id_copie != self.__id:
+            self.__id_de_testat = float(self.__id_de_testat)
+            self.__id_copie = self.__id_de_testat
+            self.__id_de_testat = int(self.__id_de_testat)
+            if self.__id_de_testat < 0 or self.__id_copie != self.__id_de_testat:
                 raise ValueError
         except ValueError:
             __err+="Id invalid!\n"

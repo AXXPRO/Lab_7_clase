@@ -1,5 +1,5 @@
 from os import system
-from Business.control import BusinessStudent
+from Business.control import BusinessDisciplina, BusinessStudent
 
 
 
@@ -33,7 +33,10 @@ class UI:
         
         __comenzi_afisare = {
             "afisare_studenti": UI_functions.afisare_student_service,
-            "cauta_student" : UI_functions.cauta_student_id_service
+            "cauta_student" : UI_functions.cauta_student_id_service,
+            "afisare_discipline": UI_functions.afisare_disciplina_service,
+            "cauta_disciplina" : UI_functions.cauta_disciplina_id_service,
+
 
         }
         __comenzi_student = {
@@ -42,7 +45,12 @@ class UI:
             "sterge_student" :  BusinessStudent.sterge_student_id_service,
             "modifica_student": BusinessStudent.modifica_student_service,
 
-            
+        }
+
+        __comenzi_disciplina = {
+            "adaugare_disciplina": BusinessDisciplina.adaugare_disciplina_service,
+            "sterge_disciplina" :  BusinessDisciplina.sterge_disciplina_id_service,
+            "modifica_disciplina": BusinessDisciplina.modifica_disciplina_service,
 
         }
         __lista_studenti = []
@@ -67,6 +75,8 @@ class UI:
                 __comenzi =[]
                 __comenzi.append(__comenzi_afisare)
                 __comenzi.append(__comenzi_student)
+                __comenzi.append(__comenzi_disciplina)
+                #__comenzi.append(__comenzi_note)
                 self.__business_choice = self.__validare_comanda(__params[0], __comenzi)
 
 
@@ -77,7 +87,9 @@ class UI:
                             self.__EXECUTA = UI_functions(__params[1:], __comenzi_afisare[__params[0]])
 
                         if self.__business_choice == 1:
-                            self.__EXECUTA = BusinessStudent(__params[1:], __comenzi_student[__params[0]])                        
+                            self.__EXECUTA = BusinessStudent(__params[1:], __comenzi_student[__params[0]])
+                        if self.__business_choice == 2:
+                            self.__EXECUTA = BusinessDisciplina(__params[1:], __comenzi_disciplina[__params[0]])                                              
                         
                     except ParamsError as err:
                         print(str(err))

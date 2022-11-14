@@ -1,5 +1,5 @@
 
-from Business.control import BusinessStudent
+from Business.control import BusinessDisciplina, BusinessStudent
 from Erori.erori import RepoError
 from Infrastructura.Studenti.domain import *
 from Infrastructura.Discipline.domain import *
@@ -199,6 +199,37 @@ class Teste:
         self.__repo_student.delete_id_student_repo(0)
         assert self.__repo_student.size_student_repo() == 0
 
+
+    def __test_control_disciplina(self):
+        self.__lista_studenti = []
+        self.__lista_discipline = []
+        self.__lista_note = []
+
+        self.__disciplina_control = Disciplina(0, "Mate", "Cotfas")
+        self.__params = [0, "Mate", "Cotfas",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.adaugare_disciplina_service)
+        assert self.__lista_discipline[0] == self.__disciplina_control
+
+        self.__disciplina_not_sters = Disciplina(1, "Romana", "Ghinea")
+        self.__params = [1, "Romana", "Ghinea", self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.adaugare_disciplina_service)
+        self.__params = [0 ,self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.sterge_disciplina_id_service)
+        assert self.__lista_discipline[0] == self.__disciplina_not_sters
+
+
+        self.__lista_discipline =[]
+        self.__disciplina_mate = Disciplina(0, "Mate", "Cotfas")
+        self.__disciplina_modificat= Disciplina(0, "Romana", "Ghinea")
+        self.__params = [0, "Mate", "Cotfas", self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.adaugare_disciplina_service)
+        self.__params = [1, "Romana", "Ghinea",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.modifica_disciplina_service)
+        assert self.__lista_discipline[0] == self.__disciplina_mate
+        self.__params = [0, "Romana", "Ghinea",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.modifica_disciplina_service)
+        assert self.__lista_discipline[0] == self.__disciplina_modificat
+
     def __test_control_student(self):
         self.__lista_studenti = []
         self.__lista_discipline = []
@@ -254,6 +285,8 @@ class Teste:
         print("Teste de validare disciplina trecute!")
         self.__test_repo_disciplina()
         print("Teste repo disciplina trecute!")
+        self.__test_control_disciplina()
+        print("Teste control disciplina trecute!")
 
         input()
         
