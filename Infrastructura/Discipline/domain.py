@@ -14,6 +14,9 @@ class Disciplina:
     def set_profesor(self, profesor):
         self.__profesor = profesor
     def __eq__(self, other):
+        """
+        Definim relatia de egalitate intre 2 discipline
+        """
         self.__bool = True
         if self.get_id() != other.get_id():
             self.__bool = False

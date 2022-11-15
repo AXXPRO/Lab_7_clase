@@ -8,7 +8,9 @@ class Student:
         return self.__nume
     def set_nume(self, nume):
         self.__nume = nume
-
+    """
+    Definim relatia de egalitate intre 2 studenti
+    """
     def __eq__(self, other):
         self.__bool = True
         if self.get_id() != other.get_id():

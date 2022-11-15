@@ -14,13 +14,21 @@ class UI:
         self.ui_main()
 
     def __print_ui(self):
+        """
+        Printeaza >>> pentru a semnifica asteptarea unei comenzi
+        """
         system('cls')
         print(">>>", end="")
 
     def __validare_comanda(self,__comanda, __comenzi):
         """
         Functie responsabila pentru a decide daca o comanda este acceptata
-        return: True, daca comanda este valabila, False altfel
+        return: -1, 0, 1, 2, 3, in functie de in care dintre liste se gaseste comanda
+        0 -afisare
+        1- studenti
+        2- discipline
+        3- note
+        -1 - comanda nu exista
         """
         for i in range(len(__comenzi)):
             if __comanda in __comenzi[i]:

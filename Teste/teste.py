@@ -288,6 +288,6 @@ class Teste:
         self.__test_control_disciplina()
         print("Teste control disciplina trecute!")
 
-        input()
+        #input()
         
 
