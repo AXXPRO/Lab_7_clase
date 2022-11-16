@@ -14,7 +14,7 @@ class DisciplinaRepo():
         Functia returneaza lista de discipline
         params: lista - lista de discipline
         """
-        return self.__lista
+        pass
 
 
     def adauga_disciplina_repo(self, disciplina):

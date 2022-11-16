@@ -15,7 +15,7 @@ class StudentRepo():
         Functia returneaza lista de studenti
         params: lista - lista de studenti
         """
-        return self.__lista
+        pass
 
 
     def adauga_student_repo(self, student):
