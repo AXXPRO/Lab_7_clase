@@ -14,14 +14,17 @@ class DisciplinaRepo():
         Functia returneaza lista de discipline
         params: lista - lista de discipline
         """
-        pass
+        lista = []
+        for i in self.__lista:
+            lista.append(self.__lista[i])
+        return lista
 
 
     def adauga_disciplina_repo(self, disciplina):
         """Functia adauga o disciplina la lista de discipline
         params: disciplina: disciplina care va fi adaugata la lista de discipline
         """
-        self.__lista.append(disciplina)
+        self.__lista[disciplina.get_id()] = disciplina
 
     def size_disciplina_repo(self):
         """
@@ -37,9 +40,9 @@ class DisciplinaRepo():
         raises: RepoError, daca nu gaseste disciplina in lista
         """
 
-        for __disciplina in self.__lista:
-            if __disciplina.get_id() == id:
-                return __disciplina
+       
+        if id in self.__lista:
+            return self.__lista[id]
         raise RepoError("Eroare repo: Disciplina inexistenta!\n")
 
     def modificare_id_disciplina_repo(self, id, disciplina_change):
@@ -48,10 +51,9 @@ class DisciplinaRepo():
         params: id - id-ul disciplinei pe care vrem sa o inlocuim
         params: disciplina_change - disciplina cu care vom modifica disciplina originala
         """
-        for __disciplina in self.__lista:
-            if __disciplina.get_id() == id:
-                __disciplina.set_nume(disciplina_change.get_nume())
-                __disciplina.set_profesor(disciplina_change.get_profesor())
+        if id in self.__lista:
+            self.__lista[id].set_nume(disciplina_change.get_nume())
+            self.__lista[id].set_profesor(disciplina_change.get_profesor())
 
 
     def delete_id_disciplina_repo(self, id):
@@ -59,9 +61,6 @@ class DisciplinaRepo():
         Functia sterge disciplina cu id-ul id
         params: id - id-ul disciplinei pe care vrem sa o stergem
         """
-        __lista_noua = []
 
-        for __disciplina in self.__lista:
-            if __disciplina.get_id() != id:
-                __lista_noua.append(__disciplina)
-        self.__lista[:] = __lista_noua
+        if id in self.__lista:
+            del(self.__lista[id])

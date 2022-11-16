@@ -61,9 +61,9 @@ class UI:
             "modifica_disciplina": BusinessDisciplina.modifica_disciplina_service,
 
         }
-        __lista_studenti = []
-        __lista_discipline = []
-        __lista_note = []
+        __lista_studenti = {}
+        __lista_discipline = {}
+        __lista_note = {}
         __Rulare = True
         while __Rulare:
             self.__print_ui()

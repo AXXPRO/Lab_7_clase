@@ -106,9 +106,12 @@ class Teste:
         self.__profesor_vaild = "Cotfas"
         self.__prima_disciplina = Disciplina(self.__id_valid, self.__nume_valid, self.__profesor_vaild)
         self.__valid = ValidareDisciplina(self.__prima_disciplina)
-        self.__lista = []
+        #
+        self.__lista = {}
+        #
+        self.__REPO_Disciplina = DisciplinaRepo(self.__lista)
         self.__valid.validare_id_disciplina(self.__lista)
-        self.__lista = [self.__prima_disciplina]   
+        self.__REPO_Disciplina.adauga_disciplina_repo(self.__prima_disciplina)  
         try:
             self.__valid.validare_id_disciplina(self.__lista)
             assert False
@@ -141,9 +144,12 @@ class Teste:
         self.__primul_student_valid = Student(self.__id_valid, self.__nume_valid)
         
         self.__valid = ValidareStudent(self.__primul_student_valid)
-        self.__lista = []
+        #
+        self.__lista = {}
+        #
+        self.__REPO_Student = StudentRepo(self.__lista)
         self.__valid.validare_id_student(self.__lista)
-        self.__lista = [self.__primul_student_valid]
+        self.__REPO_Student.adauga_student_repo(self.__primul_student_valid)
         try:
             self.__valid.validare_id_student(self.__lista)
             assert False
@@ -167,9 +173,9 @@ class Teste:
         self.__valid.is_student_valid()
 
     def __test_repo_disciplina(self):
-        self.__lista = []
+        self.__lista = {}
         self.__repo_disciplina = DisciplinaRepo(self.__lista)
-        self.__primua_disciplina = Disciplina(0, "Mate", "Cotfas")
+        self.__prima_disciplina = Disciplina(0, "Mate", "Cotfas")
         self.__a_doua_disciplina = Disciplina(1, "Romana", "Ghinea")
         assert self.__repo_disciplina.size_disciplina_repo() == 0
         self.__repo_disciplina.adauga_disciplina_repo(self.__prima_disciplina)
@@ -185,26 +191,32 @@ class Teste:
         except RepoError as err:
             assert str(err) == "Eroare repo: Disciplina inexistenta!\n"
 
-        self.__disciplina_modificare = Disciplina(3, "Muzica", "Grosar")
-        self.__repo_disciplina.modificare_id_disciplina_repo(self.__disciplina_modificare.get_id(), self.__disciplina_modificare)
-        assert self.__prima_disciplina == self.__lista[0]
-        assert self.__a_doua_disciplina == self.__lista[1]
 
         self.__disciplina_modificare = Disciplina(0, "Muzica", "Grosar")
         self.__repo_disciplina.modificare_id_disciplina_repo(self.__disciplina_modificare.get_id(), self.__disciplina_modificare)
-        assert self.__disciplina_modificare == self.__lista[0]
-        assert self.__a_doua_disciplina == self.__lista[1]
+        
+        self.__disciplina_cautata = self.__repo_disciplina.cauta_id_disciplina_repo(self.__prima_disciplina.get_id())
+        assert self.__disciplina_cautata == self.__prima_disciplina
+
+        self.__disciplina_cautata = self.__repo_disciplina.cauta_id_disciplina_repo(self.__a_doua_disciplina.get_id())
+        assert self.__disciplina_cautata == self.__a_doua_disciplina
+
 
         self.__repo_disciplina.delete_id_disciplina_repo(3)
         assert self.__repo_disciplina.size_disciplina_repo() == 2
         self.__repo_disciplina.delete_id_disciplina_repo(1)
         assert self.__repo_disciplina.size_disciplina_repo() == 1
-        assert self.__lista[0] == self.__prima_disciplina
+        try:
+            self.__repo_disciplina.cauta_id_disciplina_repo(1)
+            assert False
+        except RepoError as err:
+            assert str(err) == "Eroare repo: Disciplina inexistenta!\n"
+        
         self.__repo_disciplina.delete_id_disciplina_repo(0)
         assert self.__repo_disciplina.size_disciplina_repo() == 0
 
     def __test_repo_student(self):
-        self.__lista = []
+        self.__lista = {}
         self.__repo_student = StudentRepo(self.__lista)
         self.__primul_student = Student(0, "Marc")
         self.__al_doilea_student = Student(1, "Ionel")
@@ -221,83 +233,128 @@ class Teste:
             assert False
         except RepoError as err:
             assert str(err) == "Eroare repo: Student inexistent!\n"
-        self.__student_modificare = Student(3, "Mircel")
-        self.__repo_student.modificare_id_student_repo(self.__student_modificare.get_id(), self.__student_modificare)
-        assert self.__primul_student == self.__lista[0]
-        assert self.__al_doilea_student == self.__lista[1]
 
         self.__student_modificare = Student(0, "Mircel")
         self.__repo_student.modificare_id_student_repo(self.__student_modificare.get_id(), self.__student_modificare)
-        assert self.__student_modificare == self.__lista[0]
-        assert self.__al_doilea_student == self.__lista[1]
+        
+        self.__student_cautat = self.__repo_student.cauta_id_student_repo(self.__primul_student.get_id())
+        assert self.__student_cautat == self.__student_modificare
+
+        self.__student_cautat = self.__repo_student.cauta_id_student_repo(self.__al_doilea_student.get_id())
+        assert self.__student_cautat == self.__al_doilea_student
 
         self.__repo_student.delete_id_student_repo(3)
         assert self.__repo_student.size_student_repo() == 2
         self.__repo_student.delete_id_student_repo(1)
         assert self.__repo_student.size_student_repo() == 1
-        assert self.__lista[0] == self.__primul_student
+        
+        try:
+            self.__repo_student.cauta_id_student_repo(1)
+            assert False
+        except RepoError as err:
+            assert str(err) == "Eroare repo: Student inexistent!\n"        
+        
         self.__repo_student.delete_id_student_repo(0)
         assert self.__repo_student.size_student_repo() == 0
 
 
     def __test_control_disciplina(self):
-        self.__lista_studenti = []
-        self.__lista_discipline = []
-        self.__lista_note = []
+        self.__lista_studenti = {}
+        self.__lista_discipline = {}
+        self.__lista_note = {}
+
+        self.__REPO_Student= StudentRepo(self.__lista_studenti)
+        self.__REPO_Disciplina= DisciplinaRepo(self.__lista_discipline)
+        #self.__REPO_Note= NoteRepo(self.__lista_note)
 
         self.__disciplina_control = Disciplina(0, "Mate", "Cotfas")
         self.__params = [0, "Mate", "Cotfas",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
         self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.adaugare_disciplina_service)
-        assert self.__lista_discipline[0] == self.__disciplina_control
+
+        self.__disciplina = self.__REPO_Disciplina.cauta_id_disciplina_repo(0)
+
+        assert self.__disciplina == self.__disciplina_control
 
         self.__disciplina_not_sters = Disciplina(1, "Romana", "Ghinea")
         self.__params = [1, "Romana", "Ghinea", self.__lista_studenti, self.__lista_discipline, self.__lista_note]
         self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.adaugare_disciplina_service)
+
+        self.__disciplina = self.__REPO_Disciplina.cauta_id_disciplina_repo(1)
+
+        assert self.__disciplina == self.__disciplina_not_sters
+
         self.__params = [0 ,self.__lista_studenti, self.__lista_discipline, self.__lista_note]
         self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.sterge_disciplina_id_service)
-        assert self.__lista_discipline[0] == self.__disciplina_not_sters
+       
+        try:
+            self.__disciplina = self.__REPO_Disciplina.cauta_id_disciplina_repo(0)
+            assert False
+        except RepoError:
+            pass
 
+        self.__lista_discipline ={}
+        self.__REPO_Disciplina= DisciplinaRepo(self.__lista_discipline)
 
-        self.__lista_discipline =[]
         self.__disciplina_mate = Disciplina(0, "Mate", "Cotfas")
         self.__disciplina_modificat= Disciplina(0, "Romana", "Ghinea")
         self.__params = [0, "Mate", "Cotfas", self.__lista_studenti, self.__lista_discipline, self.__lista_note]
         self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.adaugare_disciplina_service)
-        self.__params = [1, "Romana", "Ghinea",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
-        self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.modifica_disciplina_service)
-        assert self.__lista_discipline[0] == self.__disciplina_mate
+
         self.__params = [0, "Romana", "Ghinea",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
         self.__BusinessDisciplina = BusinessDisciplina(self.__params, BusinessDisciplina.modifica_disciplina_service)
-        assert self.__lista_discipline[0] == self.__disciplina_modificat
+
+        self.__disciplina_cautata = self.__REPO_Disciplina.cauta_id_disciplina_repo(0)
+        assert self.__disciplina_cautata == self.__disciplina_modificat
 
     def __test_control_student(self):
-        self.__lista_studenti = []
-        self.__lista_discipline = []
-        self.__lista_note = []
+        self.__lista_studenti = {}
+        self.__lista_discipline = {}
+        self.__lista_note = {}
+
+        self.__REPO_Student= StudentRepo(self.__lista_studenti)
+        self.__REPO_Disciplina= DisciplinaRepo(self.__lista_discipline)
+        #self.__REPO_Note= NoteRepo(self.__lista_note)
+
         self.__student_control = Student(0, "Andrei")
         self.__params = [0, "Andrei",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
         self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.adaugare_student_service)
-        assert self.__lista_studenti[0] == self.__student_control
+
+        self.__student = self.__REPO_Student.cauta_id_student_repo(0)
+        
+        assert self.__student == self.__student_control
 
         self.__student_not_sters = Student(1, "Marc")
         self.__params = [1, "Marc", self.__lista_studenti, self.__lista_discipline, self.__lista_note]
         self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.adaugare_student_service)
+
+        self.__student = self.__REPO_Student.cauta_id_student_repo(1)
+        assert self.__student == self.__student_not_sters
+
         self.__params = [0 ,self.__lista_studenti, self.__lista_discipline, self.__lista_note]
         self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.sterge_student_id_service)
-        assert self.__lista_studenti[0] == self.__student_not_sters
+
+        try:
+            self.__student = self.__REPO_Student.cauta_id_student_repo(0)
+            assert False
+        except RepoError:
+            pass
 
 
-        self.__lista_studenti =[]
+        self.__lista_studenti ={}
+        self.__REPO_Student= StudentRepo(self.__lista_studenti)
+
         self.__student_marc = Student(0, "Marc")
         self.__student_modificat = Student(0, "Cram")
         self.__params = [0, "Marc", self.__lista_studenti, self.__lista_discipline, self.__lista_note]
         self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.adaugare_student_service)
-        self.__params = [1, "Cram",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
-        self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.modifica_student_service)
-        assert self.__lista_studenti[0] == self.__student_marc
+
+
         self.__params = [0, "Cram",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
         self.__BusinessStudent = BusinessStudent(self.__params, BusinessStudent.modifica_student_service)
-        assert self.__lista_studenti[0] == self.__student_modificat
+        
+
+        self.__student_cautat = self.__REPO_Student.cauta_id_student_repo(0)
+        assert self.__student_cautat == self.__student_modificat  
 
         
 
@@ -327,6 +384,7 @@ class Teste:
         print("Teste repo disciplina trecute!")
         self.__test_control_disciplina()
         print("Teste control disciplina trecute!")
+
 
         self.__test_domain_note()
         print("Teste domain disciplina trecute")

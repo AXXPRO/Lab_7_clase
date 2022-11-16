@@ -13,6 +13,7 @@ class UI_functions:
         self.__lista_studenti = params[-3]
         self.__lista_discipline = params[-2]
         self.__lista_note = params[-1]
+
         self.__params = params[0:len(params)-3]
         self.__REPO_STUDENT = StudentRepo(self.__lista_studenti)
         self.__REPO_DISCIPLINA = DisciplinaRepo(self.__lista_discipline)
@@ -30,16 +31,16 @@ class UI_functions:
         Functia afiseazatoti studentii din lista_studenti
         """
     
-        if self.__lista_studenti == []:
+        if self.__lista_studenti == {}:
             print("Niciun student in lista!")
             input()
             return
         
         #FOR MY OCD :
 
-        self.__lista_studenti.sort(key = self.__id_student_pentru_afisare)
+        #self.__lista_studenti.sort(key = self.__id_student_pentru_afisare)
 
-        for __student in self.__lista_studenti:
+        for __student in StudentRepo(self.__lista_studenti).get_list():
             print(__student.get_id(), __student.get_nume())
 
         input()
@@ -70,16 +71,16 @@ class UI_functions:
         Functia afiseaza toate disciplinele din lista_discipline
         """
     
-        if self.__lista_discipline == []:
+        if self.__lista_discipline == {}:
             print("Nicio disciplina in lista!")
             input()
             return
         
         #FOR MY OCD :
 
-        self.__lista_discipline.sort(key = self.__id_disciplina_pentru_afisare)
+        #self.__lista_discipline.sort(key = self.__id_disciplina_pentru_afisare)
 
-        for __disciplina in self.__lista_discipline:
+        for __disciplina in  DisciplinaRepo(self.__lista_discipline).get_list():
             print(__disciplina.get_id(), __disciplina.get_nume(), __disciplina.get_profesor())
 
         input()

@@ -1,5 +1,6 @@
-from Erori.erori import ValidationError
+from Erori.erori import RepoError, ValidationError
 from Infrastructura.Studenti.domain import *
+from Infrastructura.Studenti.repo import StudentRepo
 
 class ValidareStudent:
     def __init__(self, Student):
@@ -43,6 +44,8 @@ class ValidareStudent:
         params: lista - lista de studenti
         """
         
-        for student in lista:
-            if student.get_id() == self.__id:
-                raise ValidationError("Id deja existent!\n")
+        try:
+            __student = StudentRepo(lista).cauta_id_student_repo(self.__id)
+            raise ValidationError("Id deja existent!\n")
+        except RepoError:
+            pass

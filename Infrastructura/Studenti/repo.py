@@ -15,13 +15,16 @@ class StudentRepo():
         Functia returneaza lista de studenti
         params: lista - lista de studenti
         """
-        pass
+        lista = []
+        for i in self.__lista:
+            lista.append(self.__lista[i])
+        return lista
 
 
     def adauga_student_repo(self, student):
         """Functia adauga un student la lista de studenti
         params: student - studentul ce va fi adaugat la lista de studenti"""
-        self.__lista.append(student)
+        self.__lista[student.get_id()] = student
 
     def size_student_repo(self):
         """
@@ -37,9 +40,8 @@ class StudentRepo():
         raises: RepoError, daca nu gaseste studentul in lista
         """
 
-        for __student in self.__lista:
-            if __student.get_id() == id:
-                return __student
+        if id in self.__lista:
+            return self.__lista[id]
         raise RepoError("Eroare repo: Student inexistent!\n")
 
     def modificare_id_student_repo(self, id, student_change):
@@ -48,9 +50,8 @@ class StudentRepo():
         params: id - id-ul studentului pe care vrem sa il inlocuim
         params: student_chamge - studentul cu care vom modifica studentul original
         """
-        for __student in self.__lista:
-            if __student.get_id() == id:
-                __student.set_nume(student_change.get_nume())
+        if id in self.__lista:
+            self.__lista[id].set_nume(student_change.get_nume())
 
 
     def delete_id_student_repo(self, id):
@@ -58,9 +59,6 @@ class StudentRepo():
         Functia sterge studentul cu id-ul id
         params: id - id-ul studentului pe care vrem sa il stergem
         """
-        __lista_noua = []
 
-        for __student in self.__lista:
-            if __student.get_id() != id:
-                __lista_noua.append(__student)
-        self.__lista[:] = __lista_noua
+        if id in self.__lista:
+            del(self.__lista[id])

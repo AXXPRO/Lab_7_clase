@@ -1,4 +1,5 @@
-from Erori.erori import ValidationError
+from Erori.erori import RepoError, ValidationError
+from Infrastructura.Discipline.repo import DisciplinaRepo
 from Infrastructura.Studenti.domain import *
 
 class ValidareDisciplina:
@@ -52,6 +53,8 @@ class ValidareDisciplina:
         params: lista - lista de discipline
         """
        
-        for disciplina in lista:
-            if disciplina.get_id() == self.__id:
-                raise ValidationError("Id deja existent!\n")
+        try:
+            __disciplina = DisciplinaRepo(lista).cauta_id_disciplina_repo(self.__id)
+            raise ValidationError("Id deja existent!\n")
+        except RepoError:
+            pass
