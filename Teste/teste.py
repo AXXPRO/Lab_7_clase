@@ -1,6 +1,7 @@
 
 from Business.control import BusinessDisciplina, BusinessStudent
 from Erori.erori import RepoError
+from Infrastructura.Note.domain import Nota
 from Infrastructura.Studenti.domain import *
 from Infrastructura.Discipline.domain import *
 from Validare.Disciplina import *
@@ -9,6 +10,45 @@ from Infrastructura.Studenti.repo import *
 from Infrastructura.Discipline.repo import *
 
 class Teste:
+
+    def __test_domain_note(self):
+        """
+        Testele pentru functiile domain asociate note
+        """
+        self.__id = 0
+        self.__student= Student(0, "Eu")
+        self.__disciplina = Disciplina(0, "Mate", "Cotfas")
+        self.__valoare = 10
+        self.__prima_nota = Nota(self.__id, self.__student, self.__disciplina, self.__valoare)
+
+
+        assert self.__prima_nota.get_id() == 0
+        assert self.__prima_nota.get_student() == self.__student
+        assert self.__prima_nota.get_disciplina() == self.__disciplina
+        assert self.__prima_nota.get_valoare() == self.__valoare
+
+        self.__student_nou= Student(1, "Tu")
+        self.__disciplina_nou = Disciplina(0, "Rom", "Ghinea")
+        self.__valoare_nou = 5
+        self.__a_doua_nota = Nota(self.__id, self.__student_nou, self.__disciplina_nou, self.__valoare_nou)
+
+
+
+        self.__prima_nota.set_student(self.__student_nou)
+        self.__prima_nota.set_disciplina(self.__disciplina_nou)
+        self.__prima_nota.set_valoare(self.__valoare_nou)
+        
+        assert self.__prima_nota.get_student() == self.__student_nou
+        assert self.__prima_nota.get_disciplina() == self.__disciplina_nou
+        assert self.__prima_nota.get_valoare() == self.__valoare_nou
+
+        self.__prima_nota = Nota(self.__id, self.__student, self.__disciplina, self.__valoare)
+        self.__a_doua_nota = Nota(self.__prima_nota.get_id(),self.__prima_nota.get_student(),self.__prima_nota.get_disciplina(),self.__prima_nota.get_valoare())
+        assert self.__prima_nota == self.__a_doua_nota
+
+        #self.__a_doua_materie = Disciplina(self.__prima_materie.get_id()+1,self.__prima_materie.get_nume(),self.__prima_materie.get_profesor())
+        self.__a_doua_disciplina.set_profesor("Delia")
+        assert (self.__prima_materie == self.__a_doua_materie) == False
 
 
     def __test_domain_disciplina(self):
@@ -288,6 +328,8 @@ class Teste:
         self.__test_control_disciplina()
         print("Teste control disciplina trecute!")
 
-        #input()
+        self.__test_domain_note()
+        print("Teste domain disciplina trecute")
+        input()
         
 

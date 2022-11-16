@@ -1,4 +1,4 @@
-class Note:
+class Nota:
     def __init__(self, id, student, disciplina, valoare):
         self.__id = id
         self.__student = student
@@ -34,4 +34,3 @@ class Note:
             self.__bool = False
         return self.__bool
 
-###TESTEEEEEEEEEEEEEEEEEEEEEEEEEE
