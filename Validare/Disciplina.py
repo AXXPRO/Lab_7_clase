@@ -7,20 +7,8 @@ class ValidareDisciplina:
         self.__nume = Disciplina.get_nume()
         self.__id = Disciplina.get_id()
         self.__profesor = Disciplina.get_profesor()
-    def get_id(self):
-        """
-        returneaza id-ul Disciplinei
-        """
-        return self.__id
-    def get_nume(self):
-        """
-        returneaza numele Disciplinei
-        """
-        return self.__nume
-    def get_profesor(self):
-        """
-        returneaza numele profesorului
-        """
+
+
     def is_disciplina_valid(self):
         """
         Functia ridica o eroare daca parametrii unei discipline nu sunt valizi, cu mesaj corespunzator

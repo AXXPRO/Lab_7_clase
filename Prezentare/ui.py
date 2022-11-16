@@ -1,5 +1,5 @@
 from os import system
-from Business.control import BusinessDisciplina, BusinessStudent
+from Business.control import BusinessDisciplina, BusinessNota, BusinessStudent
 
 
 
@@ -44,7 +44,8 @@ class UI:
             "cauta_student" : UI_functions.cauta_student_id_service,
             "afisare_discipline": UI_functions.afisare_disciplina_service,
             "cauta_disciplina" : UI_functions.cauta_disciplina_id_service,
-
+            "afisare_note": UI_functions.afisare_nota_service,
+            "cauta_nota": UI_functions.cauta_nota_id_service,
 
         }
         __comenzi_student = {
@@ -59,6 +60,14 @@ class UI:
             "adaugare_disciplina": BusinessDisciplina.adaugare_disciplina_service,
             "sterge_disciplina" :  BusinessDisciplina.sterge_disciplina_id_service,
             "modifica_disciplina": BusinessDisciplina.modifica_disciplina_service,
+
+        }
+
+        __comenzi_nota = {
+            "adaugare_nota": BusinessNota.adaugare_nota_service,
+            "sterge_nota" :  BusinessNota.sterge_nota_id_service,
+            "modifica_nota": BusinessNota.modifica_nota_service,
+
 
         }
         __lista_studenti = {}
@@ -84,7 +93,7 @@ class UI:
                 __comenzi.append(__comenzi_afisare)
                 __comenzi.append(__comenzi_student)
                 __comenzi.append(__comenzi_disciplina)
-                #__comenzi.append(__comenzi_note)
+                __comenzi.append(__comenzi_nota)
                 self.__business_choice = self.__validare_comanda(__params[0], __comenzi)
 
 
@@ -97,7 +106,9 @@ class UI:
                         if self.__business_choice == 1:
                             self.__EXECUTA = BusinessStudent(__params[1:], __comenzi_student[__params[0]])
                         if self.__business_choice == 2:
-                            self.__EXECUTA = BusinessDisciplina(__params[1:], __comenzi_disciplina[__params[0]])                                              
+                            self.__EXECUTA = BusinessDisciplina(__params[1:], __comenzi_disciplina[__params[0]])   
+                        if self.__business_choice == 3:
+                            self.__EXECUTA = BusinessNota(__params[1:], __comenzi_nota[__params[0]])                                                                    
                         
                     except ParamsError as err:
                         print(str(err))

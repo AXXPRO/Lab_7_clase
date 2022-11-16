@@ -1,17 +1,19 @@
 
-from Business.control import BusinessDisciplina, BusinessStudent
+from Business.control import BusinessDisciplina, BusinessNota, BusinessStudent
 from Erori.erori import RepoError
 from Infrastructura.Note.domain import Nota
+from Infrastructura.Note.repo import NotaRepo
 from Infrastructura.Studenti.domain import *
 from Infrastructura.Discipline.domain import *
 from Validare.Disciplina import *
+from Validare.Note import ValidareNota
 from Validare.Student import *
 from Infrastructura.Studenti.repo import *
 from Infrastructura.Discipline.repo import *
 
 class Teste:
 
-    def __test_domain_note(self):
+    def __test_domain_nota(self):
         """
         Testele pentru functiile domain asociate note
         """
@@ -100,6 +102,42 @@ class Teste:
         self.__al_doilea_student = Student(self.__primul_student.get_id()+1, self.__primul_student.get_nume())
         assert (self.__primul_student == self.__al_doilea_student) == False
 
+
+
+    def __test_validare_nota(self):
+        self.__id_valid = 0
+        self.__valoare_valid = 7
+        self.__student_valid = Student(0, "Marius")
+        self.__disciplina_valid = Disciplina(0, "Mate", "Cotfas")
+        self.__prima_nota = Nota(self.__id_valid, self.__student_valid, self.__disciplina_valid, self.__valoare_valid)
+        self.__valid = ValidareNota(self.__prima_nota)
+        self.__valid.is_nota_valid()
+
+        self.__lista = {}
+        #
+        self.__REPO_Nota = NotaRepo(self.__lista)
+        self.__valid.validare_id_nota(self.__lista)
+        self.__REPO_Nota.adauga_nota_repo(self.__prima_nota)  
+        try:
+            self.__valid.validare_id_nota(self.__lista)
+            assert False
+        except ValidationError as err:
+             assert (str(err)=="Id deja existent!\n")
+
+        self.__id_gresit = -5
+        self.__valoare_gresit = "f"
+        self.__nota = Nota(self.__id_gresit, self.__student_valid, self.__disciplina_valid, self.__valoare_gresit)
+        try:
+            self.__valid = ValidareNota(self.__nota)
+            self.__valid.is_nota_valid()
+            assert False
+        except ValidationError as err:
+            assert str(err) == "Id invalid!\nNota invalida!\n"
+
+
+
+
+
     def __test_validare_disciplina(self):
         self.__id_valid = 0
         self.__nume_valid = "Mate"
@@ -172,6 +210,50 @@ class Teste:
         self.__valid = ValidareStudent(self.__student)
         self.__valid.is_student_valid()
 
+    def __test_repo_nota(self):
+        self.__lista = {}
+        self.__REPO_Nota = NotaRepo(self.__lista)
+        self.__prima_nota = Nota(0, Student(0, "Marc"), Disciplina(0, "Mate", "Cotfas"), 8)
+        self.__a_doua_nota = Nota(1, Student(1, "George"), Disciplina(0, "Romana", "Ghinea"), 2)
+
+        assert self.__REPO_Nota.size_nota_repo() == 0
+        self.__REPO_Nota.adauga_nota_repo(self.__prima_nota)
+        assert self.__REPO_Nota.size_nota_repo() == 1
+        self.__REPO_Nota.adauga_nota_repo(self.__a_doua_nota) 
+
+        self.__nota_gasit = self.__REPO_Nota.cauta_id_nota_repo(0)
+        assert self.__nota_gasit == self.__prima_nota
+
+        try:
+            self.__nota_gasit = self.__REPO_Nota.cauta_id_nota_repo(3)
+            assert False
+        except RepoError as err:
+            assert str(err) == "Eroare repo: Nota inexistenta!\n"
+        
+        self.__nota_modificare = Nota(0, Student(3, "Simeon"), Disciplina(4, "Informatica", "Stefan"), 10)
+        self.__REPO_Nota.modificare_id_nota_repo(self.__nota_modificare.get_id(), self.__nota_modificare)
+
+        self.__nota_cautata = self.__REPO_Nota.cauta_id_nota_repo(self.__prima_nota.get_id())
+        assert self.__nota_cautata == self.__nota_modificare
+
+        self.__nota_cautata = self.__REPO_Nota.cauta_id_nota_repo(self.__a_doua_nota.get_id())
+        assert self.__nota_cautata == self.__a_doua_nota
+
+        self.__REPO_Nota.delete_id_nota_repo(3)
+        assert self.__REPO_Nota.size_nota_repo() == 2
+        self.__REPO_Nota.delete_id_nota_repo(1)
+        assert self.__REPO_Nota.size_nota_repo() == 1
+
+        try:
+            self.__REPO_Nota.cauta_id_nota_repo(1)
+            assert False
+        except RepoError as err:
+            assert str(err) == "Eroare repo: Nota inexistenta!\n"
+        
+        self.__REPO_Nota.delete_id_nota_repo(0)
+        assert self.__REPO_Nota.size_nota_repo() == 0
+
+        
     def __test_repo_disciplina(self):
         self.__lista = {}
         self.__repo_disciplina = DisciplinaRepo(self.__lista)
@@ -196,7 +278,7 @@ class Teste:
         self.__repo_disciplina.modificare_id_disciplina_repo(self.__disciplina_modificare.get_id(), self.__disciplina_modificare)
         
         self.__disciplina_cautata = self.__repo_disciplina.cauta_id_disciplina_repo(self.__prima_disciplina.get_id())
-        assert self.__disciplina_cautata == self.__prima_disciplina
+        assert self.__disciplina_cautata == self.__disciplina_modificare
 
         self.__disciplina_cautata = self.__repo_disciplina.cauta_id_disciplina_repo(self.__a_doua_disciplina.get_id())
         assert self.__disciplina_cautata == self.__a_doua_disciplina
@@ -258,6 +340,102 @@ class Teste:
         assert self.__repo_student.size_student_repo() == 0
 
 
+
+    def __test_control_nota(self):
+        self.__lista_studenti = {}
+        self.__lista_discipline = {}
+        self.__lista_note = {}
+        self.__REPO_Student= StudentRepo(self.__lista_studenti)
+        self.__REPO_Disciplina= DisciplinaRepo(self.__lista_discipline)
+        self.__REPO_Nota= NotaRepo(self.__lista_note)
+
+        self.__student_control = Student(0, "Marcel")
+        self.__disciplina_control = Disciplina(0, "Engleza", "Vulpe")
+
+        self.__nota_control = Nota(0,self.__student_control ,self.__disciplina_control, 2)
+        self.__params = [0, 0, 0, 2, self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        try:
+            self.__BusinessNota = BusinessNota(self.__params, BusinessNota.adaugare_nota_service)
+            assert False
+        except RepoError as err:
+            assert str(err) == "Eroare repo: Student inexistent!\nEroare repo: Disciplina inexistenta!\n"
+        self.__REPO_Student.adauga_student_repo(self.__student_control)
+        self.__REPO_Disciplina.adauga_disciplina_repo(self.__disciplina_control)
+
+
+        self.__nota_control = Nota(0,self.__student_control ,self.__disciplina_control, 2)
+
+
+        self.__params = [0, 0, 0, 2, self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BusinessNota = BusinessNota(self.__params, BusinessNota.adaugare_nota_service)
+
+        self.__nota = self.__REPO_Nota.cauta_id_nota_repo(0)
+        assert self.__nota == self.__nota_control
+
+        self.__student_nesters= Student(1, "Violeta")
+        self.__disciplina_nesters = Disciplina(1, "Romana", "Ghinea")
+
+        self.__REPO_Student.adauga_student_repo(self.__student_nesters)
+        self.__REPO_Disciplina.adauga_disciplina_repo(self.__disciplina_nesters)
+
+        self.__nota_nesters = Nota(1,self.__student_nesters, self.__disciplina_nesters, 7)
+        
+        self.__params = [1, 1, 1, 7, self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BusinessNota = BusinessNota(self.__params, BusinessNota.adaugare_nota_service)
+
+        self.__nota = self.__REPO_Nota.cauta_id_nota_repo(1)
+        assert self.__nota == self.__nota_nesters
+
+
+        self.__params = [0 ,self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BusinessNota = BusinessNota(self.__params, BusinessNota.sterge_nota_id_service)
+
+        try:
+            self.__nota = self.__REPO_Nota.cauta_id_nota_repo(0)
+            assert False
+        except RepoError:
+            pass        
+        
+        self.__lista_note ={}
+        self.__lista_discipline ={}
+        self.__lista_studenti ={}
+        self.__REPO_Nota= NotaRepo(self.__lista_note)
+        self.__REPO_Disciplina= DisciplinaRepo(self.__lista_discipline)
+        self.__REPO_Student= StudentRepo(self.__lista_studenti)
+
+        
+        self.__student_primul= Student(0, "Violeta")
+        self.__disciplina_prima = Disciplina(0, "Romana", "Ghinea")
+        self.__student_al_doilea= Student(1, "Marcel")
+        self.__disciplina_a_doua = Disciplina(1, "Mate", "Cotfas")
+
+        self.__REPO_Student.adauga_student_repo(self.__student_primul)
+        self.__REPO_Student.adauga_student_repo(self.__student_al_doilea)
+        self.__REPO_Disciplina.adauga_disciplina_repo(self.__disciplina_prima)
+        self.__REPO_Disciplina.adauga_disciplina_repo(self.__disciplina_a_doua)
+        self.__valoare_prima = 9
+        self.__valoare_a_doua = 7
+
+        self.__nota_prima = Nota(0,self.__student_primul, self.__disciplina_prima,self.__valoare_prima)
+        self.__nota_a_doua = Nota(0,self.__student_al_doilea, self.__disciplina_a_doua,self.__valoare_a_doua)
+
+        self.__params = [0, 0, 0, 9, self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BusinessNota = BusinessNota(self.__params, BusinessNota.adaugare_nota_service)
+
+        self.__params = [0, 1, 1,7, self.__lista_studenti, self.__lista_discipline, self.__lista_note]
+        self.__BusinessNota = BusinessNota(self.__params, BusinessNota.modifica_nota_service)
+
+        self.__nota_cautata = self.__REPO_Nota.cauta_id_nota_repo(0)
+
+        assert self.__nota_cautata == self.__nota_a_doua
+
+
+
+
+
+
+
+
     def __test_control_disciplina(self):
         self.__lista_studenti = {}
         self.__lista_discipline = {}
@@ -265,7 +443,7 @@ class Teste:
 
         self.__REPO_Student= StudentRepo(self.__lista_studenti)
         self.__REPO_Disciplina= DisciplinaRepo(self.__lista_discipline)
-        #self.__REPO_Note= NoteRepo(self.__lista_note)
+        self.__REPO_Nota= NotaRepo(self.__lista_note)
 
         self.__disciplina_control = Disciplina(0, "Mate", "Cotfas")
         self.__params = [0, "Mate", "Cotfas",self.__lista_studenti, self.__lista_discipline, self.__lista_note]
@@ -370,7 +548,7 @@ class Teste:
         self.__test_domain_student()
         print("Teste domain student trecute!")
         self.__test_validare_student()
-        print("Teste validare trecute!")
+        print("Teste validare student trecute!")
         self.__test_repo_student()
         print("Teste repo student trecute!")
         self.__test_control_student()
@@ -386,8 +564,15 @@ class Teste:
         print("Teste control disciplina trecute!")
 
 
-        self.__test_domain_note()
+        self.__test_domain_nota()
         print("Teste domain disciplina trecute")
-        input()
+        self.__test_validare_nota()
+        print("Teste de validare note trecute!")
+        self.__test_repo_nota()
+        print("Teste repo nota trecute!")
+        self.__test_control_nota()
+        print("Teste control nota trecute!")
+        #input()
+
         
 

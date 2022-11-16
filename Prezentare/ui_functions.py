@@ -1,4 +1,5 @@
 from Infrastructura.Discipline.repo import DisciplinaRepo
+from Infrastructura.Note.repo import NotaRepo
 from Infrastructura.Studenti.repo import StudentRepo
 from Erori.erori import ParamsError
 
@@ -17,14 +18,9 @@ class UI_functions:
         self.__params = params[0:len(params)-3]
         self.__REPO_STUDENT = StudentRepo(self.__lista_studenti)
         self.__REPO_DISCIPLINA = DisciplinaRepo(self.__lista_discipline)
-        #self.__REPO_LISTA = 
+        self.__REPO_NOTA = NotaRepo(self.__lista_note) 
         COMANDA(self)
 
-    def __id_student_pentru_afisare(self, student):
-        """
-        returneaza id-ul lui student
-        """
-        return student.get_id()
 
     def afisare_student_service(self):
         """
@@ -60,11 +56,7 @@ class UI_functions:
         input()
 
 ##################################################################################
-    def __id_disciplina_pentru_afisare(self, disciplina):
-        """
-        returneaza id-ul unei discipline
-        """
-        return disciplina.get_id()
+
 
     def afisare_disciplina_service(self):
         """
@@ -98,3 +90,34 @@ class UI_functions:
 
         print("Disciplina cu id-ul",self.__id, "este", self.__disciplina.get_nume(),"si are profesorul", self.__disciplina.get_profesor())
         input()
+    def afisare_nota_service(self):
+        """
+        Functia afiseaza toate notele din lista_note
+        """
+    
+        if self.__lista_note == {}:
+            print("Nicio nota in lista!")
+            input()
+            return
+        
+        #FOR MY OCD :
+
+        #self.__lista_discipline.sort(key = self.__id_disciplina_pentru_afisare)
+
+        for __nota in  NotaRepo(self.__lista_note).get_list():
+            print(__nota.get_id(), __nota.get_student().get_nume(), __nota.get_disciplina().get_nume(), __nota.get_valoare())
+
+        input()
+    def cauta_nota_id_service(self):
+            """
+            Va afisa numele studentului, materia si nota cu id-ul dat, sau va afisa ca nu exista acel id
+            """
+
+            if len(self.__params) !=1:
+                raise ParamsError("Numar de parametrii invalid!")
+            self.__id = self.__params[0]
+
+            self.__nota = self.__REPO_NOTA.cauta_id_nota_repo(self.__id)
+
+            print("Studentul",self.__nota.get_student().get_nume(), "are nota", self.__nota.get_valoare(),"la", self.__nota.get_disciplina().get_nume())
+            input()
