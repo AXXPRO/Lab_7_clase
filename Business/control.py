@@ -10,88 +10,79 @@ from Validare.Note import ValidareNota
 from Validare.Student import ValidareStudent
 
 
-class BusinessStudent:
-    def __init__(self,params, COMANDA):
+class ServiceStudent:
+    def __init__(self,repo_studenti):
         """
-        Constructorul functiilor business
+        Constructorul functiilor Service
         param: params- listele + parametrii specifici fiecarei functii
         param: COMANDA- metoda clasei ce va fi executata
         
         """
-        self.__lista_studenti = params[-3]
-        self.__lista_discipline = params[-2]
-        self.__lista_note = params[-1]
-        self.__params = params[0:len(params)-3]
-        self.__REPO = StudentRepo(self.__lista_studenti)
-        COMANDA(self)
+        self.REPO_Studenti = repo_studenti
      
 
-    def sterge_student_id_service(self):
-        """
-        Functia sterge din lista de studenti studentul cu id-ul id
-        param1: id-ul
-        """
-        if len(self.__params) !=1 :
-            raise ParamsError("Numar de parametrii invalid!")
-        self.__id_de_sters = self.__params[0]
-        self.__REPO.delete_id_student_repo(self.__id_de_sters)
-    def adaugare_student_service(self):
+    # def sterge_student_id_service(self):
+    #     """
+    #     Functia sterge din lista de studenti studentul cu id-ul id
+    #     param1: id-ul
+    #     """
+    #     
+    #     self.__id_de_sters = self.__params[0]
+    #     self.__REPO.delete_id_student_repo(self.__id_de_sters)
+    def adaugare_student_service(self, params):
         """
         Functie responsabila pentru validare, si introducerea unui student in lista
         raises ValueError if element is not a student, or if id exists
         param1: id student
         param2: nume student
         """
-        if len(self.__params) != 2:
-            raise ParamsError("Numar de parametrii invalid!")
-        self.__id = self.__params[0]
-        self.__nume = self.__params[1]
+
+        self.__id = params[0]
+        self.__nume = params[1]
         self.__student = Student(self.__id, self.__nume)
         self.__VALID = ValidareStudent(self.__student)
         self.__VALID.is_student_valid()
         
-        self.__VALID.validare_id_student(self.__lista_studenti)
         
-        self.__REPO.adauga_student_repo(self.__student)
+        
+        self.REPO_Studenti.adauga_student_repo(self.__student)
 
 
-    def modifica_student_service(self):
+    def modifica_student_service(self, params):
         """
         Funcita va modifca studentul cu id-ul id, cu un student dat de utilizator
         """
-        if len(self.__params) != 2:
-            raise ParamsError("Numar de parametrii invalid!")
-        self.__id = self.__params[0]
-        self.__nume = self.__params[1]
-        self.__REPO.modificare_id_student_repo(self.__id, Student(self.__id, self.__nume))
+
+        self.__id = params[0]
+        self.__nume = params[1]
+        self.__student = Student(self.__id, self.__nume)
+        self.__VALID = ValidareStudent(self.__student)
+        self.__VALID.is_student_valid()
+        
+        self.REPO_Studenti.modificare_id_student_repo(self.__id, self.__student)
 
 
-class BusinessDisciplina:
-    def __init__(self,params, COMANDA):
+class ServiceDisciplina:
+    def __init__(self,repo_disciplina):
         """
-        Constructorul functiilor business
+        Constructorul functiilor Service
         param: params- listele + parametrii specifici fiecarei functii
         param: COMANDA- metoda clasei ce va fi executata
         
         """
-        self.__lista_studenti = params[-3]
-        self.__lista_discipline = params[-2]
-        self.__lista_note = params[-1]
-        self.__params = params[0:len(params)-3]
-        self.__REPO = DisciplinaRepo(self.__lista_discipline)
-        COMANDA(self)
+        self.REPO_Disciplina = repo_disciplina
 
-    def sterge_disciplina_id_service(self):
-        """
-        Functia sterge din lista de discipline disciplina cu id-ul id
-        param1: id-ul
-        """
-        if len(self.__params) !=1 :
-            raise ParamsError("Numar de parametrii invalid!")
-        self.__id_de_sters = self.__params[0]
-        self.__REPO.delete_id_disciplina_repo(self.__id_de_sters)
+    # def sterge_disciplina_id_service(self):
+    #     """
+    #     Functia sterge din lista de discipline disciplina cu id-ul id
+    #     param1: id-ul
+    #     """
+    #     if len(self.__params) !=1 :
+    #         raise ParamsError("Numar de parametrii invalid!")
+    #     self.__id_de_sters = self.__params[0]
+    #     self.__REPO.delete_id_disciplina_repo(self.__id_de_sters)
 
-    def adaugare_disciplina_service(self):
+    def adaugare_disciplina_service(self,params):
         """
         Functie responsabila pentru validare, si introducerea unei discipline in lista
         raises ValueError if element is not a disciplina, or if id exists
@@ -99,59 +90,86 @@ class BusinessDisciplina:
         param2: nume Disciplina
         param3: profesor Disciplina
         """
-        if len(self.__params) != 3:
-            raise ParamsError("Numar de parametrii invalid!")
-        self.__id = self.__params[0]
-        self.__nume = self.__params[1]
-        self.__profesor = self.__params[2]
+
+        self.__id = params[0]
+        self.__nume = params[1]
+        self.__profesor = params[2]
 
         self.__disciplina = Disciplina(self.__id, self.__nume, self.__profesor)
         self.__VALID = ValidareDisciplina(self.__disciplina)
         self.__VALID.is_disciplina_valid()
-        self.__VALID.validare_id_disciplina(self.__lista_discipline)
         
-        self.__REPO.adauga_disciplina_repo(self.__disciplina)
+        
+        self.REPO_Disciplina.adauga_disciplina_repo(self.__disciplina)
 
 
-    def modifica_disciplina_service(self):
+    def modifica_disciplina_service(self,params):
         """
         Funcita va modifca disciplina cu id-ul id, cu o disciplina data de utilizator
         """
-        if len(self.__params) != 3:
-            raise ParamsError("Numar de parametrii invalid!")
-        self.__id = self.__params[0]
-        self.__nume = self.__params[1]
-        self.__profesor = self.__params[2]
-        self.__REPO.modificare_id_disciplina_repo(self.__id, Disciplina(self.__id, self.__nume, self.__profesor))
+
+        self.__id = params[0]
+        self.__nume = params[1]
+        self.__profesor = params[2]
+
+        self.__disciplina = Disciplina(self.__id, self.__nume, self.__profesor)
+        self.__VALID = ValidareDisciplina(self.__disciplina)
+        self.__VALID.is_disciplina_valid()
+
+        self.REPO_Disciplina.modificare_id_disciplina_repo(self.__id, self.__disciplina)
 
 
 
-class BusinessNota:
-    def __init__(self,params, COMANDA):
+class ServiceNota:
+    def __init__(self,student_repo, disciplina_repo, nota_repo):
         """
-        Constructorul functiilor business
+        Constructorul functiilor Service
         param: params- listele + parametrii specifici fiecarei functii
         param: COMANDA- metoda clasei ce va fi executata
         
         """
-        self.__lista_studenti = params[-3]
-        self.__lista_discipline = params[-2]
-        self.__lista_note = params[-1]
-        self.__params = params[0:len(params)-3]
-        self.__REPO_Nota = NotaRepo(self.__lista_note)
-        self.__REPO_Student = StudentRepo(self.__lista_studenti)
-        self.__REPO_Disciplina = DisciplinaRepo(self.__lista_discipline)
-        COMANDA(self)
+        self.REPO_Note = nota_repo
+        self.REPO_Studenti = student_repo
+        self.REPO_Discipline = disciplina_repo
 
-    def sterge_nota_id_service(self):
+
+
+    def sterge_disciplina_id_service(self, params):
+        """
+        Sterge disciplina cu id-ul dat, si notele aferente acestei discipline
+        """
+        self.__id = params[0]
+        self.__lista_note = self.REPO_Note.get_list()
+
+        for __nota in self.__lista_note:
+            if __nota.get_disciplina().get_id() == self.__id:
+                self.sterge_nota_id_service(__nota.get_id()) 
+
+        self.REPO_Discipline.delete_id_disciplina_repo(self.__id)
+        
+
+    def sterge_student_id_service(self, params):
+        """
+        Sterge Studentul cu id-ul dat, si notele aferente acesteui student
+        """
+        self.__id = params[0]
+
+        self.__lista_note = self.REPO_Note.get_list()
+
+        for __nota in self.__lista_note:
+            if __nota.get_student().get_id() == self.__id:
+                self.sterge_nota_id_service(__nota.get_id()) 
+
+        self.REPO_Studenti.delete_id_student_repo(self.__id)
+    def sterge_nota_id_service(self,params):
         """
         Functia sterge din lista de notele cu cu id-ul id
         param1: id-ul
         """
-        if len(self.__params) !=1 :
-            raise ParamsError("Numar de parametrii invalid!")
-        self.__id_de_sters = self.__params[0]
-        self.__REPO_Nota.delete_id_nota_repo(self.__id_de_sters)
+
+        self.__id_de_sters = params[0]
+        self.REPO_Note.delete_id_nota_repo(self.__id_de_sters)
+
 
     def __check_ids(self, __student_id, __disciplina_id):
         """
@@ -163,11 +181,11 @@ class BusinessNota:
         self.__disciplina_id = __disciplina_id
 
         try:
-            self.__REPO_Student.cauta_id_student_repo(self.__student_id)
+            self.REPO_Studenti.cauta_id_student_repo(self.__student_id)
         except RepoError as err:
             self.__err += str(err)
         try:
-            self.__REPO_Disciplina.cauta_id_disciplina_repo(self.__disciplina_id)
+            self.REPO_Discipline.cauta_id_disciplina_repo(self.__disciplina_id)
         except RepoError as err:
             self.__err += str(err)
         
@@ -176,7 +194,7 @@ class BusinessNota:
              
             
         
-    def adaugare_nota_service(self):
+    def adaugare_nota_service(self,params):
         """
         Functie responsabila pentru validare, si introducerea unei note in lista
         raises ValueError if element is not a nota, or if id exists
@@ -185,37 +203,42 @@ class BusinessNota:
         param3: id Disciplina
         param4: id Valoare
         """
-        if len(self.__params) != 4:
-            raise ParamsError("Numar de parametrii invalid!")
-        self.__id = self.__params[0]
-        self.__student_id = self.__params[1]
-        self.__disciplina_id = self.__params[2]
-        self.__valoare = self.__params[3]
+
+        self.__id = params[0]
+        self.__student_id = params[1]
+        self.__disciplina_id = params[2]
+        self.__valoare = params[3]
 
         self.__check_ids(self.__student_id, self.__disciplina_id)
 
-        self.__nota = Nota(self.__id,  self.__REPO_Student.cauta_id_student_repo(self.__student_id), self.__REPO_Disciplina.cauta_id_disciplina_repo(self.__disciplina_id), self.__valoare )
+        self.__nota = Nota(self.__id,  self.REPO_Studenti.cauta_id_student_repo(self.__student_id), self.REPO_Discipline.cauta_id_disciplina_repo(self.__disciplina_id), self.__valoare )
         
         
         self.__VALID = ValidareNota(self.__nota)
         self.__VALID.is_nota_valid()
-        self.__VALID.validare_id_nota(self.__lista_note)
         
-        self.__REPO_Nota.adauga_nota_repo(self.__nota)
+
+        
+        self.REPO_Note.adauga_nota_repo(self.__nota)
 
 
-    def modifica_nota_service(self):
+    def modifica_nota_service(self,params):
         """
         Funcita va modifca nota cu id-ul id, cu o nota data de utilizator
         """
-        if len(self.__params) != 4:
-            raise ParamsError("Numar de parametrii invalid!")
 
-        self.__id = self.__params[0]
-        self.__student_id = self.__params[1]
-        self.__disciplina_id = self.__params[2]
-        self.__valoare = self.__params[3]
+
+        self.__id = params[0]
+        self.__student_id = params[1]
+        self.__disciplina_id = params[2]
+        self.__valoare = params[3]
+
+
 
         self.__check_ids(self.__student_id, self.__disciplina_id)
 
-        self.__REPO_Nota.modificare_id_nota_repo(self.__id, Nota(self.__id, self.__REPO_Student.cauta_id_student_repo(self.__student_id), self.__REPO_Disciplina.cauta_id_disciplina_repo(self.__disciplina_id), self.__valoare))
+        self.__nota = Nota(self.__id,  self.REPO_Studenti.cauta_id_student_repo(self.__student_id), self.REPO_Discipline.cauta_id_disciplina_repo(self.__disciplina_id), self.__valoare )
+        self.__VALID = ValidareNota(self.__nota)
+        self.__VALID.is_nota_valid()
+
+        self.REPO_Note.modificare_id_nota_repo(self.__id, Nota(self.__id, self.REPO_Studenti.cauta_id_student_repo(self.__student_id), self.REPO_Discipline.cauta_id_disciplina_repo(self.__disciplina_id), self.__valoare))

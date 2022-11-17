@@ -3,11 +3,11 @@ from Erori.erori import RepoError
 
 class DisciplinaRepo():
 
-    def __init__(self, lista):
+    def __init__(self):
         """Constructorul clasei disciplinarepo
         params: lista - lista de discipline
         """
-        self.__lista = lista
+        self.__lista = {}
 
     def get_list(self):
         """
@@ -24,6 +24,8 @@ class DisciplinaRepo():
         """Functia adauga o disciplina la lista de discipline
         params: disciplina: disciplina care va fi adaugata la lista de discipline
         """
+        if disciplina.get_id() in self.__lista:
+            raise RepoError("Id deja existent!\n")        
         self.__lista[disciplina.get_id()] = disciplina
 
     def size_disciplina_repo(self):

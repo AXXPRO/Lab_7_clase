@@ -3,11 +3,11 @@ from Erori.erori import RepoError
 
 class NotaRepo():
 
-    def __init__(self, lista):
+    def __init__(self):
         """Constructorul clasei notelor
         params: lista - lista de note
         """
-        self.__lista = lista
+        self.__lista = {}
 
     def get_list(self):
         """
@@ -24,6 +24,8 @@ class NotaRepo():
         """Functia adauga o nota la lista de note
         params: nota: nota care va fi adaugata la lista de note
         """
+        if nota.get_id() in self.__lista:
+            raise RepoError("Id deja existent!\n")        
         self.__lista[nota.get_id()] = nota
 
     def size_nota_repo(self):

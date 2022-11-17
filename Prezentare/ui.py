@@ -1,5 +1,5 @@
 from os import system
-from Business.control import BusinessDisciplina, BusinessNota, BusinessStudent
+
 
 
 
@@ -10,7 +10,10 @@ from Prezentare.ui_functions import UI_functions
 
 class UI:
 
-    def __init__(self):
+    def __init__(self,service_student, service_disciplina, service_nota):
+        self.__ServiceStudent = service_student
+        self.__ServiceDisciplina = service_disciplina
+        self.__ServiceNota = service_nota
         self.ui_main()
 
     def __print_ui(self):
@@ -24,55 +27,38 @@ class UI:
         """
         Functie responsabila pentru a decide daca o comanda este acceptata
         return: -1, 0, 1, 2, 3, in functie de in care dintre liste se gaseste comanda
-        0 -afisare
-        1- studenti
-        2- discipline
-        3- note
-        -1 - comanda nu exista
-        """
-        for i in range(len(__comenzi)):
-            if __comanda in __comenzi[i]:
-                return i
 
-        return -1
+        """
+    
+        if __comanda in __comenzi:
+             return True
+
+
 
     def ui_main(self):
         """Functie responsabila pentru cererea introducerii de la tastatura a comenzilor, si validarea lor"""
         
-        __comenzi_afisare = {
-            "afisare_studenti": UI_functions.afisare_student_service,
-            "cauta_student" : UI_functions.cauta_student_id_service,
-            "afisare_discipline": UI_functions.afisare_disciplina_service,
-            "cauta_disciplina" : UI_functions.cauta_disciplina_id_service,
-            "afisare_note": UI_functions.afisare_nota_service,
-            "cauta_nota": UI_functions.cauta_nota_id_service,
+        __comenzi = {
+            "afisare_studenti": self.afisare_student_ui,
+            "cauta_student" : self.cauta_student_id_ui,
+            "afisare_discipline": self.afisare_disciplina_ui,
+            "cauta_disciplina" :self.cauta_disciplina_id_ui,
+             "afisare_note": self.afisare_nota_ui,
+             "cauta_nota": self.cauta_nota_id_ui,
 
+            "adaugare_student": self.adaugare_student_ui,
+            "sterge_student" :  self.sterge_student_id_ui,
+             "modifica_student": self.modifica_student_ui,
+
+             "adaugare_disciplina": self.adaugare_disciplina_ui,
+            "sterge_disciplina" :  self.sterge_disciplina_id_ui,
+             "modifica_disciplina": self.modifica_disciplina_ui,
+
+             "adaugare_nota": self.adaugare_nota_ui,
+             "sterge_nota" :  self.sterge_nota_id_ui,
+            "modifica_nota":self.modifica_nota_ui,
         }
-        __comenzi_student = {
-
-            "adaugare_student": BusinessStudent.adaugare_student_service,
-            "sterge_student" :  BusinessStudent.sterge_student_id_service,
-            "modifica_student": BusinessStudent.modifica_student_service,
-
-        }
-
-        __comenzi_disciplina = {
-            "adaugare_disciplina": BusinessDisciplina.adaugare_disciplina_service,
-            "sterge_disciplina" :  BusinessDisciplina.sterge_disciplina_id_service,
-            "modifica_disciplina": BusinessDisciplina.modifica_disciplina_service,
-
-        }
-
-        __comenzi_nota = {
-            "adaugare_nota": BusinessNota.adaugare_nota_service,
-            "sterge_nota" :  BusinessNota.sterge_nota_id_service,
-            "modifica_nota": BusinessNota.modifica_nota_service,
-
-
-        }
-        __lista_studenti = {}
-        __lista_discipline = {}
-        __lista_note = {}
+        
         __Rulare = True
         while __Rulare:
             self.__print_ui()
@@ -80,35 +66,15 @@ class UI:
             if __comanda.lower() == "exit":
                 __Rulare = False
             else:
-                __params = __comanda.split()
-                if __params == []:
-                    __params.append("nan")
+                self.__params = __comanda.split()
 
-    
-                __params.append(__lista_studenti)
-                __params.append(__lista_discipline)
-                __params.append(__lista_note)
-
-                __comenzi =[]
-                __comenzi.append(__comenzi_afisare)
-                __comenzi.append(__comenzi_student)
-                __comenzi.append(__comenzi_disciplina)
-                __comenzi.append(__comenzi_nota)
-                self.__business_choice = self.__validare_comanda(__params[0], __comenzi)
+                __comanda = self.__params[0]
+                self.__params.pop(0)
 
 
-                if self.__business_choice!=-1:
+                if self.__validare_comanda(__comanda, __comenzi):
                     try:
-                        if self.__business_choice == 0:
-
-                            self.__EXECUTA = UI_functions(__params[1:], __comenzi_afisare[__params[0]])
-
-                        if self.__business_choice == 1:
-                            self.__EXECUTA = BusinessStudent(__params[1:], __comenzi_student[__params[0]])
-                        if self.__business_choice == 2:
-                            self.__EXECUTA = BusinessDisciplina(__params[1:], __comenzi_disciplina[__params[0]])   
-                        if self.__business_choice == 3:
-                            self.__EXECUTA = BusinessNota(__params[1:], __comenzi_nota[__params[0]])                                                                    
+                         __comenzi[__comanda]()                                                                 
                         
                     except ParamsError as err:
                         print(str(err))
@@ -122,3 +88,161 @@ class UI:
                 else: 
                     print("Comanda inexistenta!")
                     input()
+
+
+
+    def sterge_student_id_ui(self):
+        if len(self.__params) !=1 :
+            raise ParamsError("Numar de parametrii invalid!")
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")  
+        self.__ServiceNota.sterge_student_id_service(self.__params) 
+
+
+    def sterge_disciplina_id_ui(self):
+        if len(self.__params) !=1 :
+            raise ParamsError("Numar de parametrii invalid!")
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")  
+        self.__ServiceNota.sterge_disciplina_id_service(self.__params) 
+
+
+    def afisare_student_ui(self):
+        lista = self.__ServiceStudent.REPO_Studenti.get_list()
+        if lista == []:
+            print("Niciun student in lista!")
+            input()
+        else:
+            for __student in lista:
+                print(__student.get_id(), __student.get_nume())
+            input()
+    def cauta_student_id_ui(self):
+        if len(self.__params) !=1:
+            raise ParamsError("Numar de parametrii invalid!\n")
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")
+
+        Student = self.__ServiceStudent.REPO_Studenti.cauta_id_student_repo(self.__params[0])
+        print("Studentul cu id-ul",Student.get_id(), "este", Student.get_nume())
+        input()
+
+    def adaugare_student_ui(self):
+        
+        if len(self.__params) !=2:
+            raise ParamsError("Numar de parametrii invalid!\n")
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")
+        self.__ServiceStudent.adaugare_student_service(self.__params)
+
+    def modifica_student_ui(self):
+        if len(self.__params) != 2:
+            raise ParamsError("Numar de parametrii invalid!")        
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")
+        self.__ServiceStudent.modifica_student_service(self.__params)    
+
+    def adaugare_disciplina_ui(self):
+        if len(self.__params) !=3:
+            raise ParamsError("Numar de parametrii invalid!\n")
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")
+        self.__ServiceDisciplina.adaugare_disciplina_service(self.__params)
+
+
+    def afisare_disciplina_ui(self):
+        lista = self.__ServiceDisciplina.REPO_Disciplina.get_list()
+        if lista == []:
+            print("Nicio disciplina in lista!")
+            input()
+        else:
+            for __disciplina in lista:
+                print(__disciplina.get_id(), __disciplina.get_nume(), __disciplina.get_profesor())
+            input()
+
+    def cauta_disciplina_id_ui(self):
+        if len(self.__params) !=1:
+            raise ParamsError("Numar de parametrii invalid!\n")
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")
+
+        Disciplina = self.__ServiceDisciplina.REPO_Disciplina.cauta_id_disciplina_repo(self.__params[0])
+        print("Disciplina cu id-ul",Disciplina.get_id(), "este", Disciplina.get_nume(), "si il are profesor:",Disciplina.get_profesor())
+        input()
+
+    def modifica_disciplina_ui(self):
+        if len(self.__params) != 3:
+            raise ParamsError("Numar de parametrii invalid!")        
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")
+        self.__ServiceDisciplina.modifica_disciplina_service(self.__params)   
+    
+    def adaugare_nota_ui(self):
+        if len(self.__params) != 4:
+            raise ParamsError("Numar de parametrii invalid!")
+        try:
+            int(self.__params[0])
+            int(self.__params[1])
+            int(self.__params[2])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")
+        self.__ServiceNota.adaugare_nota_service(self.__params)
+
+    def sterge_nota_id_ui(self):
+        if len(self.__params) !=1 :
+            raise ParamsError("Numar de parametrii invalid!")
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")  
+        self.__ServiceNota.sterge_nota_id_service(self.__params)      
+        
+    def modifica_nota_ui(self):
+        if len(self.__params) != 4:
+            raise ParamsError("Numar de parametrii invalid!")
+        try:
+            int(self.__params[0])
+            int(self.__params[1])
+            int(self.__params[2])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")
+        self.__ServiceNota.modifica_nota_service(self.__params)
+        
+
+    def afisare_nota_ui(self):
+        lista = self.__ServiceNota.REPO_Note.get_list()
+        if lista == []:
+            print("Nicio nota in lista!")
+            input()
+        else:
+            for __nota in lista:
+                print(__nota.get_id(), __nota.get_student().get_nume(), __nota.get_disciplina().get_nume(), __nota.get_valoare())
+
+            input()
+    def cauta_nota_id_ui(self):
+        if len(self.__params) !=1:
+            raise ParamsError("Numar de parametrii invalid!")
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")     
+        Nota = self.__ServiceNota.REPO_Note.cauta_id_nota_repo(self.__params[0])
+
+
+        print("Studentul",Nota.get_student().get_nume(), "are nota", Nota.get_valoare(),"la", Nota.get_disciplina().get_nume())
+        input()         

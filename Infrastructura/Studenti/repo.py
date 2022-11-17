@@ -4,11 +4,11 @@ from Infrastructura.Studenti.domain import *
 
 class StudentRepo():
 
-    def __init__(self, lista):
+    def __init__(self):
         """Constructorul clasei studentrepo
         params: lista - lista de studenti
         """
-        self.__lista = lista
+        self.__lista = {}
 
     def get_list(self):
         """
@@ -24,6 +24,9 @@ class StudentRepo():
     def adauga_student_repo(self, student):
         """Functia adauga un student la lista de studenti
         params: student - studentul ce va fi adaugat la lista de studenti"""
+
+        if student.get_id() in self.__lista:
+            raise RepoError("Id deja existent!\n")
         self.__lista[student.get_id()] = student
 
     def size_student_repo(self):
