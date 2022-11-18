@@ -143,7 +143,7 @@ class ServiceNota:
 
         for __nota in self.__lista_note:
             if __nota.get_disciplina().get_id() == self.__id:
-                self.sterge_nota_id_service(__nota.get_id()) 
+                self.sterge_nota_id_service([__nota.get_id()]) 
 
         self.REPO_Discipline.delete_id_disciplina_repo(self.__id)
         
@@ -158,9 +158,10 @@ class ServiceNota:
 
         for __nota in self.__lista_note:
             if __nota.get_student().get_id() == self.__id:
-                self.sterge_nota_id_service(__nota.get_id()) 
+                self.sterge_nota_id_service([__nota.get_id()]) 
 
         self.REPO_Studenti.delete_id_student_repo(self.__id)
+
     def sterge_nota_id_service(self,params):
         """
         Functia sterge din lista de notele cu cu id-ul id
