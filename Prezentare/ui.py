@@ -4,7 +4,7 @@ from os import system
 
 
 from Erori.erori import ParamsError, RepoError, ValidationError
-from Prezentare.ui_functions import UI_functions
+
 
 
 
@@ -25,8 +25,7 @@ class UI:
 
     def __validare_comanda(self,__comanda, __comenzi):
         """
-        Functie responsabila pentru a decide daca o comanda este acceptata
-        return: -1, 0, 1, 2, 3, in functie de in care dintre liste se gaseste comanda
+        Functia returneaza True daca __comanda este valida, False altfel
 
         """
     
@@ -92,6 +91,11 @@ class UI:
 
 
     def sterge_student_id_ui(self):
+        """
+        Functie de ui ce apeleaza o functie din service
+        Valideaza: id-ul stundetului
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor
+        """
         if len(self.__params) !=1 :
             raise ParamsError("Numar de parametrii invalid!")
         try:
@@ -102,6 +106,11 @@ class UI:
 
 
     def sterge_disciplina_id_ui(self):
+        """
+        Functie de ui ce apeleaza o functie din service
+        Valideaza: id-ul disciplinei
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor
+        """
         if len(self.__params) !=1 :
             raise ParamsError("Numar de parametrii invalid!")
         try:
@@ -112,6 +121,10 @@ class UI:
 
 
     def afisare_student_ui(self):
+        """
+        Functie de ui ce afiseaza lista de studenti
+
+        """
         lista = self.__ServiceStudent.REPO_Studenti.get_list()
         if lista == []:
             print("Niciun student in lista!")
@@ -121,6 +134,12 @@ class UI:
                 print(__student.get_id(), __student.get_nume())
             input()
     def cauta_student_id_ui(self):
+        """
+        Functie de ui ce afiseaza studentul caruia ii corespunde un id
+        Valideaza: id-ul stundetului
+        Raise: RepoError daca studentul nu exista
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor
+        """
         if len(self.__params) !=1:
             raise ParamsError("Numar de parametrii invalid!\n")
         try:
@@ -133,7 +152,11 @@ class UI:
         input()
 
     def adaugare_student_ui(self):
-        
+        """
+        Functie de ui ce apeleaza o functie din service
+        Valideaza: id-ul studentului
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor sau ValidationError
+        """        
         if len(self.__params) !=2:
             raise ParamsError("Numar de parametrii invalid!\n")
         try:
@@ -143,6 +166,11 @@ class UI:
         self.__ServiceStudent.adaugare_student_service(self.__params)
 
     def modifica_student_ui(self):
+        """
+        Functie de ui ce apeleaza o functie din service
+        Valideaza: id-ul studentului
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor
+        """    
         if len(self.__params) != 2:
             raise ParamsError("Numar de parametrii invalid!")        
         try:
@@ -152,6 +180,11 @@ class UI:
         self.__ServiceStudent.modifica_student_service(self.__params)    
 
     def adaugare_disciplina_ui(self):
+        """
+        Functie de ui ce apeleaza o functie din service
+        Valideaza: id-ul disciplinei
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor
+        """    
         if len(self.__params) !=3:
             raise ParamsError("Numar de parametrii invalid!\n")
         try:
@@ -162,6 +195,9 @@ class UI:
 
 
     def afisare_disciplina_ui(self):
+        """
+        Functie ce printeaza lista de discipline
+        """
         lista = self.__ServiceDisciplina.REPO_Disciplina.get_list()
         if lista == []:
             print("Nicio disciplina in lista!")
@@ -172,6 +208,11 @@ class UI:
             input()
 
     def cauta_disciplina_id_ui(self):
+        """
+        Functie de ui ce apeleaza o functie din service
+        Valideaza: id-ul disciplinei
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor si RepoError daca studentul nu exista
+        """    
         if len(self.__params) !=1:
             raise ParamsError("Numar de parametrii invalid!\n")
         try:
@@ -184,6 +225,11 @@ class UI:
         input()
 
     def modifica_disciplina_ui(self):
+        """
+        Functie de ui ce apeleaza o functie din service
+        Valideaza: id-ul disciplinei
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor
+        """    
         if len(self.__params) != 3:
             raise ParamsError("Numar de parametrii invalid!")        
         try:
@@ -193,6 +239,11 @@ class UI:
         self.__ServiceDisciplina.modifica_disciplina_service(self.__params)   
     
     def adaugare_nota_ui(self):
+        """
+        Functie de ui ce apeleaza o functie din service
+        Valideaza: id-ul notei, studentului, disciplinei
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor
+        """    
         if len(self.__params) != 4:
             raise ParamsError("Numar de parametrii invalid!")
         try:
@@ -204,6 +255,11 @@ class UI:
         self.__ServiceNota.adaugare_nota_service(self.__params)
 
     def sterge_nota_id_ui(self):
+        """
+        Functie de ui ce apeleaza o functie din service
+        Valideaza: id-ul notei, studentului, disciplinei
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor
+        """    
         if len(self.__params) !=1 :
             raise ParamsError("Numar de parametrii invalid!")
         try:
@@ -213,6 +269,11 @@ class UI:
         self.__ServiceNota.sterge_nota_id_service(self.__params)      
         
     def modifica_nota_ui(self):
+        """
+        Functie de ui ce apeleaza o functie din service
+        Valideaza: id-ul notei, studentului, disciplinei
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor
+        """    
         if len(self.__params) != 4:
             raise ParamsError("Numar de parametrii invalid!")
         try:
@@ -225,6 +286,9 @@ class UI:
         
 
     def afisare_nota_ui(self):
+        """
+        Functie ce printeaza notele din lista
+        """
         lista = self.__ServiceNota.REPO_Note.get_list()
         if lista == []:
             print("Nicio nota in lista!")
@@ -235,6 +299,11 @@ class UI:
 
             input()
     def cauta_nota_id_ui(self):
+        """
+        Functie de ui ce apeleaza o functie din service
+        Valideaza: id-ul notei, studentului, disciplinei
+        Raises: ParamsError pentru orice eroare legata de numarul de parametrii sau validarea lor si RepoError daca nu exista nota
+        """    
         if len(self.__params) !=1:
             raise ParamsError("Numar de parametrii invalid!")
         try:

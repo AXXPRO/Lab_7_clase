@@ -20,15 +20,6 @@ class ServiceStudent:
         """
         self.REPO_Studenti = repo_studenti
      
-
-    # def sterge_student_id_service(self):
-    #     """
-    #     Functia sterge din lista de studenti studentul cu id-ul id
-    #     param1: id-ul
-    #     """
-    #     
-    #     self.__id_de_sters = self.__params[0]
-    #     self.__REPO.delete_id_student_repo(self.__id_de_sters)
     def adaugare_student_service(self, params):
         """
         Functie responsabila pentru validare, si introducerea unui student in lista
@@ -51,6 +42,8 @@ class ServiceStudent:
     def modifica_student_service(self, params):
         """
         Funcita va modifca studentul cu id-ul id, cu un student dat de utilizator
+        param1: id-ul
+        param2: numele
         """
 
         self.__id = params[0]
@@ -71,16 +64,6 @@ class ServiceDisciplina:
         
         """
         self.REPO_Disciplina = repo_disciplina
-
-    # def sterge_disciplina_id_service(self):
-    #     """
-    #     Functia sterge din lista de discipline disciplina cu id-ul id
-    #     param1: id-ul
-    #     """
-    #     if len(self.__params) !=1 :
-    #         raise ParamsError("Numar de parametrii invalid!")
-    #     self.__id_de_sters = self.__params[0]
-    #     self.__REPO.delete_id_disciplina_repo(self.__id_de_sters)
 
     def adaugare_disciplina_service(self,params):
         """
@@ -137,6 +120,7 @@ class ServiceNota:
     def sterge_disciplina_id_service(self, params):
         """
         Sterge disciplina cu id-ul dat, si notele aferente acestei discipline
+        param1: id-ul disciplinei
         """
         self.__id = params[0]
         self.__lista_note = self.REPO_Note.get_list()
@@ -151,6 +135,7 @@ class ServiceNota:
     def sterge_student_id_service(self, params):
         """
         Sterge Studentul cu id-ul dat, si notele aferente acesteui student
+        param1: id-ul studentului
         """
         self.__id = params[0]
 
@@ -175,7 +160,6 @@ class ServiceNota:
     def __check_ids(self, __student_id, __disciplina_id):
         """
         Functia verifica daca exista sau nu student si disciplina cu id-ul dat
-        TEETTETETETSSSSSSSTTTTTT
         """
         self.__err = ""
         self.__student_id = __student_id
@@ -226,6 +210,10 @@ class ServiceNota:
     def modifica_nota_service(self,params):
         """
         Funcita va modifca nota cu id-ul id, cu o nota data de utilizator
+        param1: id-ul notei
+        param2: id-ul studentului
+        param3: id-ul disciplinei
+        param4: valoare notei
         """
 
 
