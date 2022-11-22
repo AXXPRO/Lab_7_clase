@@ -28,15 +28,3 @@ class ValidareStudent:
         if len(__err) > 0:
             raise ValidationError(__err)
 
-
-    def validare_id_student(self, lista):
-        """
-        Valideaza daca id-ul studentului nu este existent deja in lista de studenti
-        params: lista - lista de studenti
-        """
-        
-        try:
-            __student = StudentRepo(lista).cauta_id_student_repo(self.__id)
-            raise ValidationError("Id deja existent!\n")
-        except RepoError:
-            pass

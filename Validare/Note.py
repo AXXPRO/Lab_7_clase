@@ -37,14 +37,3 @@ class ValidareNota:
             raise ValidationError(__err)
 
 
-    def validare_id_nota(self, lista):
-        """
-        Valideaza daca id-ul notei nu este existent deja in lista de note
-        params: lista - lista de note
-        """
-       
-        try:
-            __nota = NotaRepo(lista).cauta_id_nota_repo(self.__id)
-            raise ValidationError("Id deja existent!\n")
-        except RepoError:
-            pass

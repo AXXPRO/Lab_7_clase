@@ -35,14 +35,3 @@ class ValidareDisciplina:
             raise ValidationError(__err)
 
 
-    def validare_id_disciplina(self, lista):
-        """
-        Valideaza daca id-ul disciplinei nu este existent deja in lista de discipline
-        params: lista - lista de discipline
-        """
-       
-        try:
-            __disciplina = DisciplinaRepo(lista).cauta_id_disciplina_repo(self.__id)
-            raise ValidationError("Id deja existent!\n")
-        except RepoError:
-            pass
