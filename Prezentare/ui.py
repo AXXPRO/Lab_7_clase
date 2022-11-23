@@ -45,6 +45,8 @@ class UI:
              "afisare_note": self.afisare_nota_ui,
              "cauta_nota": self.cauta_nota_id_ui,
 
+            "adaugare_studenti_random": self.adauga_x_studenti_ui,
+            "adaugare_discipline_random": self.adauga_x_discipline_ui,
             "adaugare_student": self.adaugare_student_ui,
             "sterge_student" :  self.sterge_student_id_ui,
              "modifica_student": self.modifica_student_ui,
@@ -62,7 +64,7 @@ class UI:
         while __Rulare:
             self.__print_ui()
             __comanda = input()
-            if __comanda.lower() == "exit":
+            if __comanda.lower() == "exit" or __comanda == "":
                 __Rulare = False
             else:
                 self.__params = __comanda.split()
@@ -88,6 +90,31 @@ class UI:
                     print("Comanda inexistenta!")
                     input()
 
+
+    def adauga_x_discipline_ui(self):
+        """
+        Functia va crea un numar dat de utilizator de discipline, si ii va adauga in aplicatie
+        """
+        if len(self.__params) !=1 :
+            raise ParamsError("Numar de parametrii invalid!")
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")
+        
+        self.__ServiceDisciplina.adauga_discipline_random(self.__params)
+    def adauga_x_studenti_ui(self):
+        """
+        Functia va crea un numar dat de utilizator de studenti, si ii va adauga in aplicatie
+        """
+        if len(self.__params) !=1 :
+            raise ParamsError("Numar de parametrii invalid!")
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")
+        
+        self.__ServiceStudent.adauga_studenti_random(self.__params)
 
 
     def sterge_student_id_ui(self):

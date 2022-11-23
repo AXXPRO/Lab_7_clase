@@ -8,6 +8,8 @@ from Infrastructura.Studenti.repo import StudentRepo
 from Validare.Disciplina import ValidareDisciplina
 from Validare.Note import ValidareNota
 from Validare.Student import ValidareStudent
+import random
+import string
 
 
 class ServiceStudent:
@@ -19,7 +21,38 @@ class ServiceStudent:
         
         """
         self.REPO_Studenti = repo_studenti
-     
+
+    def __get_max_id_student_service(self):
+        """
+        Functia va returna cel mai mare id al unui student din lista
+        """
+        __lista = self.REPO_Studenti.get_list()
+        if __lista == []:
+            return -1
+        __max_id = max(__lista, key = lambda x: int(x.get_id())) 
+        return __max_id.get_id()  
+    def __creaza_student_random_service(self):
+        """
+        Functia va crea un student cu nume random si id random, si il va returna
+        """
+
+        __id_student = str(int(self.__get_max_id_student_service()) + 1)
+        __nume = ""
+
+        for i in range(random.randint(5,16)):
+            __nume+=random.choice(string.ascii_lowercase)
+        return Student(__id_student, __nume)
+    def adauga_studenti_random(self, params):
+        """
+        Functia va adauga un numar dat de studenti random in lista
+        """
+        __numar_studenti = int(params[0])
+        for i in range(0, __numar_studenti):
+            __student_random = self.__creaza_student_random_service()
+            self.adaugare_student_service([__student_random.get_id(), __student_random.get_nume()])
+
+
+
     def adaugare_student_service(self, params):
         """
         Functie responsabila pentru validare, si introducerea unui student in lista
@@ -33,8 +66,6 @@ class ServiceStudent:
         self.__student = Student(self.__id, self.__nume)
         self.__VALID = ValidareStudent(self.__student)
         self.__VALID.is_student_valid()
-        
-        
         
         self.REPO_Studenti.adauga_student_repo(self.__student)
 
@@ -64,6 +95,37 @@ class ServiceDisciplina:
         
         """
         self.REPO_Disciplina = repo_disciplina
+    def __get_max_id_disciplina_service(self):
+        """
+        Functia va returna cel mai mare id al unui disciplina din lista
+        """
+        __lista = self.REPO_Disciplina.get_list()
+        if __lista == []:
+            return -1
+        __max_id = max(__lista, key = lambda x: int(x.get_id())) 
+        return __max_id.get_id()  
+    def __creaza_disciplina_random_service(self):
+        """
+        Functia va crea o disciplina cu nume random si id random, si il va returna
+        """
+
+        __id_disciplina= str(int(self.__get_max_id_disciplina_service()) + 1)
+        __nume = ""
+        __profesor = ""
+
+        for i in range(random.randint(5,16)):
+            __nume+=random.choice(string.ascii_lowercase)
+        for i in range(random.randint(5,16)):
+            __profesor+=random.choice(string.ascii_lowercase)
+        return Disciplina(__id_disciplina, __nume, __profesor)
+    def adauga_discipline_random(self, params):
+        """
+        Functia va adauga un numar dat de discipline random in lista
+        """
+        __numar_discipline = int(params[0])
+        for i in range(0, __numar_discipline):
+            __disciplina_random = self.__creaza_disciplina_random_service()
+            self.adaugare_disciplina_service([__disciplina_random.get_id(), __disciplina_random.get_nume(), __disciplina_random.get_profesor()])
 
     def adaugare_disciplina_service(self,params):
         """

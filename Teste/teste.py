@@ -180,6 +180,10 @@ class Teste:
         assert self.__REPO_Nota.size_nota_repo() == 1
         self.__REPO_Nota.adauga_nota_repo(self.__a_doua_nota) 
 
+        self.__lista_note = self.__REPO_Nota.get_list()
+        assert self.__lista_note[0] == self.__prima_nota
+        assert self.__lista_note[1] == self.__a_doua_nota
+
         self.__nota_gasit = self.__REPO_Nota.cauta_id_nota_repo(0)
         assert self.__nota_gasit == self.__prima_nota
 
@@ -223,6 +227,11 @@ class Teste:
         assert self.__repo_disciplina.size_disciplina_repo() == 1
         self.__repo_disciplina.adauga_disciplina_repo(self.__a_doua_disciplina)
 
+
+        self.__lista_discipline = self.__repo_disciplina.get_list()
+        assert self.__lista_discipline[0] == self.__prima_disciplina
+        assert self.__lista_discipline[1] == self.__a_doua_disciplina
+
         self.__disciplina_gasit = self.__repo_disciplina.cauta_id_disciplina_repo(0)
         assert self.__disciplina_gasit == self.__prima_disciplina
 
@@ -264,6 +273,10 @@ class Teste:
         self.__repo_student.adauga_student_repo(self.__primul_student)
         assert self.__repo_student.size_student_repo() == 1
         self.__repo_student.adauga_student_repo(self.__al_doilea_student)
+
+        self.__lista_studenti = self.__repo_student.get_list()
+        assert self.__lista_studenti[0] == self.__primul_student
+        assert self.__lista_studenti[1] == self.__al_doilea_student
 
         self.__student_gasit = self.__repo_student.cauta_id_student_repo(0)
         assert self.__student_gasit == self.__primul_student
