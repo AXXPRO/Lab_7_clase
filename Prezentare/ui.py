@@ -58,6 +58,8 @@ class UI:
              "adaugare_nota": self.adaugare_nota_ui,
              "sterge_nota" :  self.sterge_nota_id_ui,
             "modifica_nota":self.modifica_nota_ui,
+
+            "statistici_disciplina": self.lista_note_ordonate_ui,
         }
         
         __Rulare = True
@@ -90,6 +92,30 @@ class UI:
                     print("Comanda inexistenta!")
                     input()
 
+
+
+    def lista_note_ordonate_ui(self):
+        """
+        Functia va afisa statisticile legate de o disciplina data de utilizator ordonate
+        """
+        if len(self.__params) !=1 :
+            raise ParamsError("Numar de parametrii invalid!")
+        try:
+            int(self.__params[0])
+        except ValueError:
+            raise ParamsError("Id invalid!\n")        
+
+        lista = self.__ServiceNota.lista_note_ordonate_service(self.__params)
+
+        
+        if lista == []:
+            print("Nicio nota in lista!")
+            input()
+        else:
+            for __nota in lista:
+                print(__nota.get_id(), __nota.get_student().get_nume(), __nota.get_disciplina().get_nume(), __nota.get_valoare())
+
+            input()        
 
     def adauga_x_discipline_ui(self):
         """

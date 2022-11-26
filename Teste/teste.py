@@ -449,6 +449,45 @@ class Teste:
             assert False
         except ValidationError as err:
             assert str(err) == "Id invalid!\nNume invalid!\n" 
+    def __test_statistici(self):
+        """Functia resposnabila pentru a testa crearea de statistici"""
+
+        self.__REPO_Nota = NotaRepo()
+        self.__REPO_Student = StudentRepo()
+        self.__REPO_Disciplina = DisciplinaRepo()
+        self.__SERVICE_disciplina = ServiceDisciplina(self.__REPO_Disciplina)
+        self.__SERVICE_student = ServiceStudent(self.__REPO_Student)
+        self.__SERVICE_nota = ServiceNota(self.__REPO_Student, self.__REPO_Disciplina,self.__REPO_Nota)    
+
+
+        student1 = Student(0, "Marc")
+        student2 = Student(1, "Alex")
+        student3 = Student(2, "Alex")
+        disciplina = Disciplina(0, "Mate", "Delia")
+
+        self.__SERVICE_student.adaugare_student_service([0, "Marc"])
+        self.__SERVICE_student.adaugare_student_service([1, "Alex"])
+        self.__SERVICE_student.adaugare_student_service([2, "Alex"])
+        self.__SERVICE_disciplina.adaugare_disciplina_service([0, "Mate", "Delia"])
+
+
+        nota1 = Nota(0, student1, disciplina, 9)
+        nota2 = Nota(1, student2, disciplina, 8)
+        nota3 = Nota(2, student3, disciplina, 7)
+        self.__SERVICE_nota.adaugare_nota_service([0,student1.get_id(),disciplina.get_id(),9])
+        self.__SERVICE_nota.adaugare_nota_service([1,student2.get_id(),disciplina.get_id(),8])
+        self.__SERVICE_nota.adaugare_nota_service([2,student3.get_id(),disciplina.get_id(),7])
+        lista_ordonata = self.__SERVICE_nota.lista_note_ordonate_service([0])
+
+        # for nota in lista_ordonata:
+        #     print(nota.get_student().get_nume() , nota.get_valoare())
+        # input()
+
+        # for nota in [nota2, nota3, nota1]:
+        #     print(nota.get_student().get_nume() , nota.get_valoare())
+        # input()
+        assert lista_ordonata == [nota2, nota3, nota1]
+
 
 
     def ruleaza_toate_testele(self):
@@ -482,6 +521,9 @@ class Teste:
         print("Teste repo nota trecute!")
         self.__test_control_nota()
         print("Teste control nota trecute!")
+
+        self.__test_statistici()
+        print("Teste de statistici trecute!")
         input()
 
         

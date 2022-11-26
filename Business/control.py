@@ -166,6 +166,9 @@ class ServiceDisciplina:
 
 
 class ServiceNota:
+
+
+
     def __init__(self,student_repo, disciplina_repo, nota_repo):
         """
         Constructorul functiilor Service
@@ -177,6 +180,35 @@ class ServiceNota:
         self.REPO_Studenti = student_repo
         self.REPO_Discipline = disciplina_repo
 
+    def __lista_note_neordonate_service(self, id):
+        """
+        Functia va returna o lista cu toate notele la disciplina cu id-ul dat
+        """
+        lista_originala = self.REPO_Note.get_list()
+
+        lista_de_returnat = []
+
+        for nota in lista_originala:
+            if nota.get_disciplina().get_id() == id:
+                lista_de_returnat.append(nota)
+        return lista_de_returnat
+
+
+
+    def lista_note_ordonate_service(self, params):
+        """
+        Functia va ordona studentii dupa nume, note, la o disciplina data de utilizator
+        params1: id-ul disciplinei
+        """
+        self.__id = params[0]
+        self.REPO_Discipline.cauta_id_disciplina_repo(self.__id)
+
+        lista_neordonata = self.__lista_note_neordonate_service(self.__id)
+
+        ###aici o ordonezi
+        lista_neordonata.sort(key = lambda x:(x.get_student().get_nume(), -int(x.get_valoare())))
+
+        return lista_neordonata
 
 
     def sterge_disciplina_id_service(self, params):
