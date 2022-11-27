@@ -1,6 +1,7 @@
 
 from Business.control import ServiceDisciplina, ServiceNota, ServiceStudent
 from Erori.erori import RepoError
+from Infrastructura.Medii.domain import Medii
 from Infrastructura.Note.domain import Nota
 from Infrastructura.Note.repo import NotaRepo
 from Infrastructura.Studenti.domain import *
@@ -489,6 +490,25 @@ class Teste:
         assert lista_ordonata == [nota2, nota3, nota1]
 
 
+        self.__SERVICE_nota.adaugare_nota_service([3,student1.get_id(),disciplina.get_id(),10])
+        self.__SERVICE_nota.adaugare_nota_service([4,student2.get_id(),disciplina.get_id(),2])
+        self.__SERVICE_nota.adaugare_nota_service([5,student3.get_id(),disciplina.get_id(),1])
+        lista = self.__SERVICE_nota.lista_medii_service()
+        assert len(lista) == 1
+        assert lista[0].get_nume() == "Marc" 
+
+
+
+    def __test_domain_medii(self):
+        """
+        teste domain medii
+        """
+        medie1 = Medii(0, "Marcel", 7.65)
+        medie2= Medii(1, "Marcel", 7.65)
+
+        assert medie1.get_nume() == "Marcel"
+        assert medie2.get_medie() == 7.65
+        assert medie1 == medie2
 
     def ruleaza_toate_testele(self):
         """
@@ -522,6 +542,8 @@ class Teste:
         self.__test_control_nota()
         print("Teste control nota trecute!")
 
+        self.__test_domain_medii
+        print("Teste de domain medii trecute!")
         self.__test_statistici()
         print("Teste de statistici trecute!")
         input()

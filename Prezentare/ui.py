@@ -60,6 +60,7 @@ class UI:
             "modifica_nota":self.modifica_nota_ui,
 
             "statistici_disciplina": self.lista_note_ordonate_ui,
+            "statistici_medii" : self.lista_medii_ui
         }
         
         __Rulare = True
@@ -93,6 +94,20 @@ class UI:
                     input()
 
 
+
+    def lista_medii_ui(self):
+        """
+        Functia va afisa top 20% studenti cu cele mai mari medii
+        """
+        studenti_top = self.__ServiceNota.lista_medii_service()
+
+        if studenti_top == []:
+            print("Niciun student adaugat momentan!")
+            input()
+        else:
+            for medie in studenti_top:
+                print(str(medie))
+            input()
 
     def lista_note_ordonate_ui(self):
         """

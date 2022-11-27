@@ -1,6 +1,7 @@
 from Erori.erori import ParamsError, RepoError
 from Infrastructura.Discipline.domain import Disciplina
 from Infrastructura.Discipline.repo import DisciplinaRepo
+from Infrastructura.Medii.domain import Medii
 from Infrastructura.Note.domain import Nota
 from Infrastructura.Note.repo import NotaRepo
 from Infrastructura.Studenti.domain import *
@@ -193,6 +194,34 @@ class ServiceNota:
                 lista_de_returnat.append(nota)
         return lista_de_returnat
 
+    def __douza_zeci(self):
+        """
+        returneaza cat inseamna 20% din toti studentii
+        """
+
+        numar_studenti = self.REPO_Studenti.size_student_repo()
+        return round((20 * numar_studenti)/100)
+
+
+    def lista_medii_service(self):
+        """
+        Functia responsabila pentru a intoarce o lista cu top 20% studenti
+        """
+        lista_note = self.REPO_Note.get_list()
+        situatie_studenti = {}
+        for nota in lista_note:
+            id_student = nota.get_student().get_id()
+            if id_student not in situatie_studenti:
+                    situatie_studenti[id_student] = []
+            situatie_studenti[id_student].append(nota.get_valoare())
+        rez =[]
+        for id_student in situatie_studenti:
+            nume_student = self.REPO_Studenti.cauta_id_student_repo(id_student).get_nume()
+            medie = sum(situatie_studenti[id_student] ) / len(situatie_studenti[id_student])
+            rez.append(Medii(id_student, nume_student, medie))
+            rez.sort(key = lambda x: x.get_medie() ,reverse = True)
+        
+        return rez[:self.__douza_zeci()]
 
 
     def lista_note_ordonate_service(self, params):
