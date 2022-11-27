@@ -213,7 +213,7 @@ class ServiceNota:
             id_student = nota.get_student().get_id()
             if id_student not in situatie_studenti:
                     situatie_studenti[id_student] = []
-            situatie_studenti[id_student].append(nota.get_valoare())
+            situatie_studenti[id_student].append(int(nota.get_valoare()))
         rez =[]
         for id_student in situatie_studenti:
             nume_student = self.REPO_Studenti.cauta_id_student_repo(id_student).get_nume()
