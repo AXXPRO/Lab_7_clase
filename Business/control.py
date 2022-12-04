@@ -219,7 +219,7 @@ class ServiceNota:
             nume_student = self.REPO_Studenti.cauta_id_student_repo(id_student).get_nume()
             medie = sum(situatie_studenti[id_student] ) / len(situatie_studenti[id_student])
             rez.append(Medii(id_student, nume_student, medie))
-            rez.sort(key = lambda x: x.get_medie() ,reverse = True)
+        rez.sort(key = lambda x: x.get_medie() ,reverse = True)
         
         return rez[:self.__douza_zeci()]
 
