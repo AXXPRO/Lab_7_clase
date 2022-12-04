@@ -496,6 +496,7 @@ class Teste:
         lista = self.__SERVICE_nota.lista_medii_service()
         assert len(lista) == 1
         assert lista[0].get_nume() == "Marc" 
+        assert lista[0].get_medie() == 9.5
 
 
 
