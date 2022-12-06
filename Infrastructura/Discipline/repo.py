@@ -69,7 +69,7 @@ class DisciplinaRepo():
             del(self.__lista[id])
 
 
-class DisciplinatRepoFisiere(DisciplinaRepo):
+class DisciplinaRepoFisiere(DisciplinaRepo):
     def __init__(self):
        DisciplinaRepo.__init__(self)
 
