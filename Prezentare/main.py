@@ -5,7 +5,7 @@ from Business.control import ServiceDisciplina, ServiceNota, ServiceStudent
 
 from Infrastructura.Discipline.repo import DisciplinaRepo
 from Infrastructura.Note.repo import NotaRepo
-from Infrastructura.Studenti.repo import StudentRepoFisiere
+from Infrastructura.Studenti.repo import StudentRepo
 
 from Prezentare.ui import UI
 
@@ -15,7 +15,7 @@ from Teste.teste import Teste
 def main():
     instanta_testare = Teste()
     instanta_testare.ruleaza_toate_testele()
-    student_repo = StudentRepoFisiere()
+    student_repo = StudentRepo()
     disciplina_repo = DisciplinaRepo()
     nota_repo = NotaRepo()
     service_student = ServiceStudent(student_repo)
