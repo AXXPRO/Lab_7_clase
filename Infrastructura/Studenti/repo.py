@@ -71,7 +71,7 @@ class StudentRepoFisiere(StudentRepo):
     def __init__(self):
        StudentRepo.__init__(self)
 
-       self.__path = r'C:\Users\Gabi\Desktop\Lab_7_clase\studenti.txt'
+       self.__path = r'studenti.txt'
        self.__load_from_file()
     
     def get_list(self):
