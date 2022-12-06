@@ -3,7 +3,7 @@ sys.path.append('../')
 sys.path.append('./')
 from Business.control import ServiceDisciplina, ServiceNota, ServiceStudent
 
-from Infrastructura.Discipline.repo import DisciplinaRepo
+from Infrastructura.Discipline.repo import DisciplinatRepoFisiere
 from Infrastructura.Note.repo import NotaRepo
 from Infrastructura.Studenti.repo import StudentRepoFisiere
 from Prezentare.ui import UI
@@ -15,7 +15,7 @@ def main():
     instanta_testare = Teste()
     instanta_testare.ruleaza_toate_testele()
     student_repo = StudentRepoFisiere()
-    disciplina_repo = DisciplinaRepo()
+    disciplina_repo = DisciplinatRepoFisiere()
     nota_repo = NotaRepo()
     service_student = ServiceStudent(student_repo)
     service_disciplina = ServiceDisciplina(disciplina_repo)
