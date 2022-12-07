@@ -181,6 +181,23 @@ class ServiceNota:
         self.REPO_Studenti = student_repo
         self.REPO_Discipline = disciplina_repo
 
+    def medie_litera_service(self, litera):
+        """
+        Functia de service ce se va afisa media studentilor al caror nume incepe cu o litera
+        VA INTOARCE o LISTA cu UN FLOAT CA SI MEDIA NOTELOR TUTUROR STUDENTILOR CARE INCEP CU O LITERA
+        """
+        lista_note = self.REPO_Note.get_list()
+        note = []
+        for nota in lista_note:
+            numele_student = nota.get_student().get_nume()
+            if numele_student[0].lower() == litera:
+                note.append(int(nota.get_valoare()))
+        if note == []:
+            return []
+        else:
+            medie = sum(note) / len(note)
+            return [medie]
+
     def __lista_note_neordonate_service(self, id):
         """
         Functia va returna o lista cu toate notele la disciplina cu id-ul dat

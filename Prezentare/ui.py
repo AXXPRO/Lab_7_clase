@@ -60,7 +60,8 @@ class UI:
             "modifica_nota":self.modifica_nota_ui,
 
             "statistici_disciplina": self.lista_note_ordonate_ui,
-            "statistici_medii" : self.lista_medii_ui
+            "statistici_medii" : self.lista_medii_ui,
+            "statistici_studenti": self.medie_litera_ui
         }
         
         __Rulare = True
@@ -94,6 +95,22 @@ class UI:
                     input()
 
 
+        """
+        Functia de ui ce se va afisa media studentilor al caror nume incepe cu o litera
+        """
+        if len(self.__params) !=1 :
+            raise ParamsError("Numar de parametrii invalid!")
+        self.__params[0] = self.__params[0].lower()
+        if self.__params[0] <"a" or self.__params[0] > "z":
+            raise ParamsError("Litera invalida!")
+
+        lista_medii = self.__ServiceNota.medie_litera_service(self.__params[0])
+        if lista_medii == []:
+            print("Niciun element in lista!")
+            input()
+        else:
+                print(lista_medii[0])
+                input()
 
     def lista_medii_ui(self):
         """
