@@ -510,6 +510,9 @@ class Teste:
         assert medie1.get_nume() == "Marcel"
         assert medie2.get_medie() == 7.65
         assert medie1 == medie2
+    def __test_fisiere(self):
+        """Testele verifica buna functionare a fisierelor"""
+
 
     def ruleaza_toate_testele(self):
         """
@@ -547,6 +550,9 @@ class Teste:
         print("Teste de domain medii trecute!")
         self.__test_statistici()
         print("Teste de statistici trecute!")
+
+        self.__test_fisiere()
+        print("Teste de fisiere trecute!")
         input()
 
         
