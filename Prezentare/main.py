@@ -14,9 +14,9 @@ from Teste.teste import Teste
 def main():
     instanta_testare = Teste()
     instanta_testare.ruleaza_toate_testele()
-    student_repo = StudentRepoFisiere()
-    disciplina_repo = DisciplinaRepoFisiere()
-    nota_repo = NotaRepoFisiere()
+    student_repo = StudentRepoFisiere("studenti.txt")
+    disciplina_repo = DisciplinaRepoFisiere("discipline.txt")
+    nota_repo = NotaRepoFisiere("note.txt")
     service_student = ServiceStudent(student_repo)
     service_disciplina = ServiceDisciplina(disciplina_repo)
     service_nota = ServiceNota(student_repo, disciplina_repo, nota_repo)

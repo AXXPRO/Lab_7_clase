@@ -1,0 +1,3 @@
+0;stud0
+1;stud1
+2;stud2

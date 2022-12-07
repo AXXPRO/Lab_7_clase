@@ -1,3 +1,1 @@
-0;0;Marcel;2;Naspa;Nasparlie;9
-1;0;Marcel;1;Romana;Ghinea;7
-45;2;damian;3;Civica;Mara;10
+45;2;damian;3;Civica;Mara;10.0

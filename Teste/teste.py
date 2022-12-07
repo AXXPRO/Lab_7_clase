@@ -3,7 +3,7 @@ from Business.control import ServiceDisciplina, ServiceNota, ServiceStudent
 from Erori.erori import RepoError
 from Infrastructura.Medii.domain import Medii
 from Infrastructura.Note.domain import Nota
-from Infrastructura.Note.repo import NotaRepo
+from Infrastructura.Note.repo import NotaRepo, NotaRepoFisiere
 from Infrastructura.Studenti.domain import *
 from Infrastructura.Discipline.domain import *
 from Validare.Disciplina import *
@@ -512,6 +512,100 @@ class Teste:
         assert medie1 == medie2
     def __test_fisiere(self):
         """Testele verifica buna functionare a fisierelor"""
+        self.__REPO_Student = StudentRepoFisiere("studenti_test.txt")
+        assert self.__REPO_Student.size_student_repo() == 3
+
+        lista_studenti = self.__REPO_Student.get_list()
+        
+        assert lista_studenti == [Student(0, "stud0"), Student(1, "stud1"), Student(2,"stud2")]
+        student_nou = Student(3, "stud3")
+        self.__REPO_Student.adauga_student_repo(student_nou)
+        assert self.__REPO_Student.size_student_repo() == 4
+        student_gasit = self.__REPO_Student.cauta_id_student_repo(2)
+        assert student_gasit == Student(2, "stud2")
+
+        try:
+            student_gasit = self.__REPO_Student.cauta_id_student_repo(4)
+        except RepoError as err:
+            assert str(err) == "Eroare repo: Student inexistent!\n"
+        
+        student_modificat = Student(0, "stud0modificat")
+        self.__REPO_Student.modificare_id_student_repo(0, student_modificat)
+        assert self.__REPO_Student.cauta_id_student_repo(0) == student_modificat
+
+        student_modificat = Student(0, "stud0")
+        self.__REPO_Student.modificare_id_student_repo(0, student_modificat)
+        assert self.__REPO_Student.cauta_id_student_repo(0) == Student(0, "stud0")
+
+        self.__REPO_Student.delete_id_student_repo(3)
+        assert self.__REPO_Student.size_student_repo() == 3
+
+
+        self.__REPO_Disciplina = DisciplinaRepoFisiere("discipline_test.txt")
+        assert self.__REPO_Disciplina.size_disciplina_repo() == 3
+
+        lista_disciplinai = self.__REPO_Disciplina.get_list()
+        
+        assert lista_disciplinai == [Disciplina(0, "nume0","prof0"), Disciplina(1, "nume1","prof1"), Disciplina(2, "nume2","prof2")]
+        disciplina_nou = Disciplina(3, "nume3","prof3")
+        self.__REPO_Disciplina.adauga_disciplina_repo(disciplina_nou)
+        assert self.__REPO_Disciplina.size_disciplina_repo() == 4
+        disciplina_gasit = self.__REPO_Disciplina.cauta_id_disciplina_repo(2)
+        assert disciplina_gasit == Disciplina(2, "nume2","prof2")
+
+        try:
+            disciplina_gasit = self.__REPO_Disciplina.cauta_id_disciplina_repo(4)
+        except RepoError as err:
+            assert str(err) == "Eroare repo: Disciplina inexistenta!\n"
+        
+        disciplina_modificat = Disciplina(0, "nume0modificat","prof0modificat")
+        self.__REPO_Disciplina.modificare_id_disciplina_repo(0, disciplina_modificat)
+        assert self.__REPO_Disciplina.cauta_id_disciplina_repo(0) == disciplina_modificat
+
+        disciplina_modificat = Disciplina(0, "nume0", "prof0")
+        self.__REPO_Disciplina.modificare_id_disciplina_repo(0, disciplina_modificat)
+        assert self.__REPO_Disciplina.cauta_id_disciplina_repo(0) == Disciplina(0, "nume0", "prof0")
+
+        self.__REPO_Disciplina.delete_id_disciplina_repo(3)
+        assert self.__REPO_Disciplina.size_disciplina_repo() == 3
+
+
+        self.__REPO_Nota = NotaRepoFisiere("note_test.txt")
+        self.__REPO_Student.adauga_student_repo(Student(3,"stud3"))
+        self.__REPO_Disciplina.adauga_disciplina_repo(Disciplina(3,"nume3","prof3"))
+
+
+
+
+        assert self.__REPO_Nota.size_nota_repo() == 3
+
+        lista_notai = self.__REPO_Nota.get_list()
+        
+        assert lista_notai == [Nota(0,Student(0,"stud0"),Disciplina(0, "nume0", "prof0"),10), Nota(1,Student(1,"stud1"),Disciplina(1, "nume1", "prof1"),9), Nota(2,Student(2,"stud2"),Disciplina(2, "nume2", "prof2"),8)]
+        nota_nou = Nota(3,Student(3,"stud3"),Disciplina(3, "nume3", "prof3"),7)
+        self.__REPO_Nota.adauga_nota_repo(nota_nou)
+        assert self.__REPO_Nota.size_nota_repo() == 4
+        nota_gasit = self.__REPO_Nota.cauta_id_nota_repo(2)
+        assert nota_gasit == Nota(2,Student(2,"stud2"),Disciplina(2, "nume2", "prof2"),8)
+
+        try:
+            nota_gasit = self.__REPO_Nota.cauta_id_nota_repo(4)
+        except RepoError as err:
+            assert str(err) == "Eroare repo: Nota inexistenta!\n"
+        
+        nota_modificat = Nota(0,Student(0,"stud0modif"),Disciplina(0,"nume0modif","prof0modif"),1)
+        self.__REPO_Nota.modificare_id_nota_repo(0, nota_modificat)
+        assert self.__REPO_Nota.cauta_id_nota_repo(0) == nota_modificat
+
+        nota_modificat = Nota(0,Student(0,"stud0"),Disciplina(0, "nume0", "prof0"),10)
+        self.__REPO_Nota.modificare_id_nota_repo(0, nota_modificat)
+        assert self.__REPO_Nota.cauta_id_nota_repo(0) == Nota(0,Student(0,"stud0"),Disciplina(0, "nume0", "prof0"),10)
+
+        self.__REPO_Nota.delete_id_nota_repo(3)
+        assert self.__REPO_Nota.size_nota_repo() == 3
+
+        self.__REPO_Student.delete_id_student_repo(3)
+        self.__REPO_Disciplina.delete_id_disciplina_repo(3)
 
 
     def ruleaza_toate_testele(self):
@@ -551,7 +645,7 @@ class Teste:
         self.__test_statistici()
         print("Teste de statistici trecute!")
 
-        self.__test_fisiere()
+      #  self.__test_fisiere()
         print("Teste de fisiere trecute!")
         input()
 

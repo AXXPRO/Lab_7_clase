@@ -1,0 +1,3 @@
+0;nume0;prof0
+1;nume1;prof1
+2;nume2;prof2

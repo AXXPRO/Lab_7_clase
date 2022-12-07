@@ -72,10 +72,10 @@ class NotaRepo():
             del(self.__lista[id])
 
 class NotaRepoFisiere(NotaRepo):
-    def __init__(self):
+    def __init__(self,path):
        NotaRepo.__init__(self)
 
-       self.__path = r'note.txt'
+       self.__path = path
        self.__load_from_file()
     
     def get_list(self):
@@ -122,9 +122,9 @@ class NotaRepoFisiere(NotaRepo):
         while nota_impachetat != "":
             nota_impachetat  =nota_impachetat.strip()
             nota_params = nota_impachetat.split(";")
-            student = Student(nota_params[1], nota_params[2])
-            disciplina = Disciplina(nota_params[3],nota_params[4],nota_params[5])
-            NotaRepo.adauga_nota_repo(self, Nota(nota_params[0],student, disciplina, nota_params[6]))
+            student = Student(int(nota_params[1]), nota_params[2])
+            disciplina = Disciplina(int(nota_params[3]),nota_params[4],nota_params[5])
+            NotaRepo.adauga_nota_repo(self, Nota(int(nota_params[0]),student, disciplina, float(nota_params[6])))
 
             nota_impachetat = fisier_note.readline()
         fisier_note.close()

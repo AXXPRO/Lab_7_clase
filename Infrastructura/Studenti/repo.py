@@ -68,10 +68,10 @@ class StudentRepo():
 
 
 class StudentRepoFisiere(StudentRepo):
-    def __init__(self):
+    def __init__(self, path):
        StudentRepo.__init__(self)
 
-       self.__path = r'studenti.txt'
+       self.__path = path
        self.__load_from_file()
     
     def get_list(self):
@@ -118,7 +118,7 @@ class StudentRepoFisiere(StudentRepo):
         while studentul_impachetat != "":
             studentul_impachetat  =studentul_impachetat.strip()
             studentul_params = studentul_impachetat.split(";")
-            StudentRepo.adauga_student_repo(self, Student(studentul_params[0],studentul_params[1]))
+            StudentRepo.adauga_student_repo(self, Student(int(studentul_params[0]),studentul_params[1]))
             studentul_impachetat = fisier_studenti.readline()
         fisier_studenti.close()
 

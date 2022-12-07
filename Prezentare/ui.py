@@ -135,7 +135,8 @@ class UI:
         try:
             int(self.__params[0])
         except ValueError:
-            raise ParamsError("Id invalid!\n")        
+            raise ParamsError("Id invalid!\n")   
+        self.__params[0] = int(self.__params[0])     
 
         lista = self.__ServiceNota.lista_note_ordonate_service(self.__params)
 
@@ -159,7 +160,7 @@ class UI:
             int(self.__params[0])
         except ValueError:
             raise ParamsError("Id invalid!\n")
-        
+        self.__params[0] = int(self.__params[0])
         self.__ServiceDisciplina.adauga_discipline_random(self.__params)
     def adauga_x_studenti_ui(self):
         """
@@ -171,6 +172,7 @@ class UI:
             int(self.__params[0])
         except ValueError:
             raise ParamsError("Id invalid!\n")
+        self.__params[0] = int(self.__params[0])
         
         self.__ServiceStudent.adauga_studenti_random(self.__params)
 
@@ -187,6 +189,7 @@ class UI:
             int(self.__params[0])
         except ValueError:
             raise ParamsError("Id invalid!\n")  
+        self.__params[0] = int(self.__params[0])
         self.__ServiceNota.sterge_student_id_service(self.__params) 
 
 
@@ -202,6 +205,7 @@ class UI:
             int(self.__params[0])
         except ValueError:
             raise ParamsError("Id invalid!\n")  
+        self.__params[0] = int(self.__params[0])
         self.__ServiceNota.sterge_disciplina_id_service(self.__params) 
 
 
@@ -231,6 +235,7 @@ class UI:
             int(self.__params[0])
         except ValueError:
             raise ParamsError("Id invalid!\n")
+        self.__params[0] = int(self.__params[0])
 
         Student = self.__ServiceStudent.REPO_Studenti.cauta_id_student_repo(self.__params[0])
         print("Studentul cu id-ul",Student.get_id(), "este", Student.get_nume())
@@ -248,6 +253,7 @@ class UI:
             int(self.__params[0])
         except ValueError:
             raise ParamsError("Id invalid!\n")
+        self.__params[0] = int(self.__params[0])
         self.__ServiceStudent.adaugare_student_service(self.__params)
 
     def modifica_student_ui(self):
@@ -262,6 +268,7 @@ class UI:
             int(self.__params[0])
         except ValueError:
             raise ParamsError("Id invalid!\n")
+        self.__params[0] = int(self.__params[0])
         self.__ServiceStudent.modifica_student_service(self.__params)    
 
     def adaugare_disciplina_ui(self):
@@ -276,6 +283,7 @@ class UI:
             int(self.__params[0])
         except ValueError:
             raise ParamsError("Id invalid!\n")
+        self.__params[0] = int(self.__params[0])
         self.__ServiceDisciplina.adaugare_disciplina_service(self.__params)
 
 
@@ -304,7 +312,7 @@ class UI:
             int(self.__params[0])
         except ValueError:
             raise ParamsError("Id invalid!\n")
-
+        self.__params[0] = int(self.__params[0])
         Disciplina = self.__ServiceDisciplina.REPO_Disciplina.cauta_id_disciplina_repo(self.__params[0])
         print("Disciplina cu id-ul",Disciplina.get_id(), "este", Disciplina.get_nume(), "si il are profesor:",Disciplina.get_profesor())
         input()
@@ -321,6 +329,7 @@ class UI:
             int(self.__params[0])
         except ValueError:
             raise ParamsError("Id invalid!\n")
+        self.__params[0] = int(self.__params[0])
         self.__ServiceDisciplina.modifica_disciplina_service(self.__params)   
     
     def adaugare_nota_ui(self):
@@ -337,6 +346,9 @@ class UI:
             int(self.__params[2])
         except ValueError:
             raise ParamsError("Id invalid!\n")
+        self.__params[0] = int(self.__params[0])
+        self.__params[1] = int(self.__params[1])
+        self.__params[2] = int(self.__params[2])
         self.__ServiceNota.adaugare_nota_service(self.__params)
 
     def sterge_nota_id_ui(self):
@@ -351,6 +363,7 @@ class UI:
             int(self.__params[0])
         except ValueError:
             raise ParamsError("Id invalid!\n")  
+        self.__params[0] = int(self.__params[0])
         self.__ServiceNota.sterge_nota_id_service(self.__params)      
         
     def modifica_nota_ui(self):
@@ -367,6 +380,9 @@ class UI:
             int(self.__params[2])
         except ValueError:
             raise ParamsError("Id invalid!\n")
+        self.__params[0] = int(self.__params[0])
+        self.__params[1] = int(self.__params[1])
+        self.__params[2] = int(self.__params[2])
         self.__ServiceNota.modifica_nota_service(self.__params)
         
 
@@ -394,7 +410,8 @@ class UI:
         try:
             int(self.__params[0])
         except ValueError:
-            raise ParamsError("Id invalid!\n")     
+            raise ParamsError("Id invalid!\n")    
+        self.__params[0] = int(self.__params[0]) 
         Nota = self.__ServiceNota.REPO_Note.cauta_id_nota_repo(self.__params[0])
 
 

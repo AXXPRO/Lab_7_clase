@@ -70,10 +70,10 @@ class DisciplinaRepo():
 
 
 class DisciplinaRepoFisiere(DisciplinaRepo):
-    def __init__(self):
+    def __init__(self,path):
        DisciplinaRepo.__init__(self)
 
-       self.__path = r'discipline.txt'
+       self.__path =path
        self.__load_from_file()
     
     def get_list(self):
@@ -120,7 +120,7 @@ class DisciplinaRepoFisiere(DisciplinaRepo):
         while disciplina_impachetat != "":
             disciplina_impachetat  =disciplina_impachetat.strip()
             disciplina_params = disciplina_impachetat.split(";")
-            DisciplinaRepo.adauga_disciplina_repo(self, Disciplina(disciplina_params[0],disciplina_params[1], disciplina_params[2]))
+            DisciplinaRepo.adauga_disciplina_repo(self, Disciplina(int(disciplina_params[0]),disciplina_params[1], disciplina_params[2]))
             disciplina_impachetat = fisier_discipline.readline()
         fisier_discipline.close()
 
