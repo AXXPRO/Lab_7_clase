@@ -94,7 +94,7 @@ class UI:
                     print("Comanda inexistenta!")
                     input()
 
-
+    def medie_litera_ui(self):
         """
         Functia de ui ce se va afisa media studentilor al caror nume incepe cu o litera
         """
