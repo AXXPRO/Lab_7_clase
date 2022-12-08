@@ -1,6 +1,7 @@
 from Erori.erori import RepoError
 from Infrastructura.Discipline.domain import Disciplina
 from Infrastructura.Note.domain import Nota
+from Infrastructura.NoteDTO.domain import NotaDTO
 from Infrastructura.Studenti.domain import Student
 
 
@@ -71,38 +72,49 @@ class NotaRepo():
         if id in self.__lista:
             del(self.__lista[id])
 
-class NotaRepoFisiere(NotaRepo):
+class NotaRepoFisiere():
     def __init__(self,path):
-       NotaRepo.__init__(self)
-
+       self.__lista_note = {}
        self.__path = path
        self.__load_from_file()
-    
+
+    def empty(self):
+        self.__lista_note = {}
+        self.__store_in_file()
     def get_list(self):
         self.__load_from_file()
-        return NotaRepo.get_list(self)
+        return [x for x in self.__lista_note.values()]
+
 
     def adauga_nota_repo(self, nota):
-          self.__load_from_file()
-          NotaRepo.adauga_nota_repo(self, nota)
-          self.__store_in_file()
+        self.__load_from_file()
+        if nota.get_id_nota() in self.__lista_note:
+            raise RepoError("Nota deja existenta!\n")
+        self.__lista_note[nota.get_id_nota()] = nota
+        self.__store_in_file()
 
     def size_nota_repo(self):
         self.__load_from_file()
-        return NotaRepo.size_nota_repo(self)
+        return len(self.__lista_note)
 
     def cauta_id_nota_repo(self, id):
         self.__load_from_file()
-        return NotaRepo.cauta_id_nota_repo(self, id)
+        if id not in self.__lista_note:
+            raise RepoError("Nota inexistenta!\n")
+        return self.__lista_note[id]
 
     def modificare_id_nota_repo(self, id, nota_change):
           self.__load_from_file()
-          NotaRepo.modificare_id_nota_repo(self, id, nota_change)
+          self.__lista_note[id].set_id_student(nota_change.get_id_student())
+          self.__lista_note[id].set_id_disciplina(nota_change.get_id_disciplina())
+          self.__lista_note[id].set_valoare(nota_change.get_valoare())
+
           self.__store_in_file()
 
     def delete_id_nota_repo(self, id):
           self.__load_from_file()
-          NotaRepo.delete_id_nota_repo(self, id)
+          if id in self.__lista_note:
+            del(self.__lista_note[id])
           self.__store_in_file()
 
 
@@ -111,7 +123,7 @@ class NotaRepoFisiere(NotaRepo):
         """
         functia resposnabila pentru a adauga in lista de note, notele din fisier
         """
-        NotaRepo.__init__(self)
+        self.__lista_note = {}
 
         try:
          fisier_note = open(self.__path, "r")
@@ -122,9 +134,10 @@ class NotaRepoFisiere(NotaRepo):
         while nota_impachetat != "":
             nota_impachetat  =nota_impachetat.strip()
             nota_params = nota_impachetat.split(";")
-            student = Student(int(nota_params[1]), nota_params[2])
-            disciplina = Disciplina(int(nota_params[3]),nota_params[4],nota_params[5])
-            NotaRepo.adauga_nota_repo(self, Nota(int(nota_params[0]),student, disciplina, float(nota_params[6])))
+
+
+            self.__lista_note[int(nota_params[0])] = NotaDTO(int(nota_params[0]),int(nota_params[1]),int(nota_params[2]),int(nota_params[3]))
+
 
             nota_impachetat = fisier_note.readline()
         fisier_note.close()
@@ -138,8 +151,9 @@ class NotaRepoFisiere(NotaRepo):
          fisier_note = open(self.__path, "w")
         except IOError:
             pass
-        lista_note = NotaRepo.get_list(self)
+        lista_note = [x for x in self.__lista_note.values()]
+
 
         for nota in lista_note:
-            fisier_note.write(f"{nota.get_id()};{nota.get_student().get_id()};{nota.get_student().get_nume()};{nota.get_disciplina().get_id()};{nota.get_disciplina().get_nume()};{nota.get_disciplina().get_profesor()};{nota.get_valoare()}\n")
+            fisier_note.write(f"{nota.get_id_nota()};{nota.get_id_student()};{nota.get_id_disciplina()};{nota.get_valoare()}\n")
         fisier_note.close()

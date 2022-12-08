@@ -4,9 +4,8 @@ from Infrastructura.Note.repo import NotaRepo
 
 class ValidareNota:
     def __init__(self, Nota):
-        self.__id = Nota.get_id()
-        self.__student = Nota.get_student()
-        self.__disciplina = Nota.get_disciplina()
+        self.__id = Nota.get_id_nota()
+
         self.__valoare= Nota.get_valoare()
    
     def is_nota_valid(self):

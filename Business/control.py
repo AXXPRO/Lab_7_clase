@@ -4,6 +4,7 @@ from Infrastructura.Discipline.repo import DisciplinaRepo
 from Infrastructura.Medii.domain import Medii
 from Infrastructura.Note.domain import Nota
 from Infrastructura.Note.repo import NotaRepo
+from Infrastructura.NoteDTO.domain import NotaDTO
 from Infrastructura.Studenti.domain import *
 from Infrastructura.Studenti.repo import StudentRepo
 from Validare.Disciplina import ValidareDisciplina
@@ -186,10 +187,11 @@ class ServiceNota:
         Functia de service ce se va afisa media studentilor al caror nume incepe cu o litera
         VA INTOARCE o LISTA cu UN FLOAT CA SI MEDIA NOTELOR TUTUROR STUDENTILOR CARE INCEP CU O LITERA
         """
+        #CHECK
         lista_note = self.REPO_Note.get_list()
         note = []
         for nota in lista_note:
-            numele_student = nota.get_student().get_nume()
+            numele_student = self.REPO_Studenti.cauta_id_student_repo().get_nume()
             if numele_student[0].lower() == litera:
                 note.append(int(nota.get_valoare()))
         if note == []:
@@ -203,11 +205,11 @@ class ServiceNota:
         Functia va returna o lista cu toate notele la disciplina cu id-ul dat
         """
         lista_originala = self.REPO_Note.get_list()
-
+        #CHECK
         lista_de_returnat = []
 
         for nota in lista_originala:
-            if nota.get_disciplina().get_id() == id:
+            if nota.get_id_disciplina() == id:
                 lista_de_returnat.append(nota)
         return lista_de_returnat
 
@@ -224,10 +226,11 @@ class ServiceNota:
         """
         Functia responsabila pentru a intoarce o lista cu top 20% studenti
         """
+        #CHECK
         lista_note = self.REPO_Note.get_list()
         situatie_studenti = {}
         for nota in lista_note:
-            id_student = nota.get_student().get_id()
+            id_student = nota.get_id_student()
             if id_student not in situatie_studenti:
                     situatie_studenti[id_student] = []
             situatie_studenti[id_student].append(int(nota.get_valoare()))
@@ -264,10 +267,11 @@ class ServiceNota:
         """
         self.__id = params[0]
         self.__lista_note = self.REPO_Note.get_list()
+        #CHECK
 
         for __nota in self.__lista_note:
-            if __nota.get_disciplina().get_id() == self.__id:
-                self.sterge_nota_id_service([__nota.get_id()]) 
+            if __nota.get_id_disciplina() == self.__id:
+                self.sterge_nota_id_service([__nota.get_id_nota()]) 
 
         self.REPO_Discipline.delete_id_disciplina_repo(self.__id)
         
@@ -280,10 +284,11 @@ class ServiceNota:
         self.__id = params[0]
 
         self.__lista_note = self.REPO_Note.get_list()
+        #CHECK
 
         for __nota in self.__lista_note:
-            if __nota.get_student().get_id() == self.__id:
-                self.sterge_nota_id_service([__nota.get_id()]) 
+            if __nota.get_id_student() == self.__id:
+                self.sterge_nota_id_service([__nota.get_id_nota()]) 
 
         self.REPO_Studenti.delete_id_student_repo(self.__id)
 
@@ -317,7 +322,13 @@ class ServiceNota:
         if len(self.__err) > 0:
             raise RepoError(self.__err)
              
-            
+    def cauta_nota_id_service(self, params):
+        """
+        params0: - id-ul notei
+        """       
+        self.__id = params[0]
+        self.__nota_DTO = self.REPO_Note.cauta_id_nota_repo(self.__id)
+        return Nota(self.__id, self.REPO_Studenti.cauta_id_student_repo(self.__nota_DTO.get_id_student()),self.REPO_Discipline.cauta_id_disciplina_repo(self.__nota_DTO.get_id_disciplina()), self.__nota_DTO.get_valoare())
         
     def adaugare_nota_service(self,params):
         """
@@ -328,7 +339,7 @@ class ServiceNota:
         param3: id Disciplina
         param4: id Valoare
         """
-
+        #CHECK
         self.__id = params[0]
         self.__student_id = params[1]
         self.__disciplina_id = params[2]
@@ -336,7 +347,7 @@ class ServiceNota:
 
         self.__check_ids(self.__student_id, self.__disciplina_id)
 
-        self.__nota = Nota(self.__id,  self.REPO_Studenti.cauta_id_student_repo(self.__student_id), self.REPO_Discipline.cauta_id_disciplina_repo(self.__disciplina_id), self.__valoare )
+        self.__nota = NotaDTO(self.__id, self.__student_id, self.__disciplina_id, self.__valoare )
         
         
         self.__VALID = ValidareNota(self.__nota)
@@ -345,8 +356,12 @@ class ServiceNota:
 
         
         self.REPO_Note.adauga_nota_repo(self.__nota)
-
-
+    def afisare_nota_service(self):
+        lista_note_dto = self.REPO_Note.get_list()
+        rez = []
+        for nota in lista_note_dto:
+            rez.append(Nota(nota.get_id_nota(),self.REPO_Studenti.cauta_id_student_repo(nota.get_id_student()), self.REPO_Discipline.cauta_id_disciplina_repo(nota.get_id_disciplina()), nota.get_valoare() ))
+        return rez
     def modifica_nota_service(self,params):
         """
         Funcita va modifca nota cu id-ul id, cu o nota data de utilizator
@@ -366,8 +381,8 @@ class ServiceNota:
 
         self.__check_ids(self.__student_id, self.__disciplina_id)
 
-        self.__nota = Nota(self.__id,  self.REPO_Studenti.cauta_id_student_repo(self.__student_id), self.REPO_Discipline.cauta_id_disciplina_repo(self.__disciplina_id), self.__valoare )
+        self.__nota = NotaDTO(self.__id,  self.__student_id,self.__disciplina_id, self.__valoare)
         self.__VALID = ValidareNota(self.__nota)
         self.__VALID.is_nota_valid()
 
-        self.REPO_Note.modificare_id_nota_repo(self.__id, Nota(self.__id, self.REPO_Studenti.cauta_id_student_repo(self.__student_id), self.REPO_Discipline.cauta_id_disciplina_repo(self.__disciplina_id), self.__valoare))
+        self.REPO_Note.modificare_id_nota_repo(self.__id, NotaDTO(self.__id,  self.__student_id,self.__disciplina_id, self.__valoare))

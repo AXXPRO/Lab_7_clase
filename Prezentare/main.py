@@ -10,13 +10,13 @@ from Prezentare.ui import UI
 
 import unittest
 from Teste.teste import Teste
-from Teste.teste_unit import TestDomainStudent
+from Teste.teste_unit import TestDomainStudent, TestDomainNotaDTO, TestRepoNotaDTO
 
 def main():
     
-    unittest.main()
-    #instanta_testare = Teste()
-    #instanta_testare.ruleaza_toate_testele()
+    #unittest.main()
+    instanta_testare = Teste()
+    instanta_testare.ruleaza_toate_testele()
     student_repo = StudentRepoFisiere("studenti.txt")
     disciplina_repo = DisciplinaRepoFisiere("discipline.txt")
     nota_repo = NotaRepoFisiere("note.txt")

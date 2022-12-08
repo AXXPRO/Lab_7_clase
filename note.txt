@@ -1,1 +1,1 @@
-45;2;damian;3;Civica;Mara;10.0
+0;1;0;9
