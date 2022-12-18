@@ -10,11 +10,11 @@ from Prezentare.ui import UI
 
 import unittest
 from Teste.teste import Teste
-from Teste.teste_unit import TestDomainStudent, TestDomainNotaDTO, TestRepoNotaDTO
+from Teste.teste_unit import TestDomainStudent, TestDomainNotaDTO, TestRepoNotaDTO, TestDomainDisciplina ,TestValidareStudent, TestValidareDisciplina, TestValidareNotaDTO,TestRepoStudent,TestRepoDisciplina, TestControlStudent, TestControlDisciplina, TestDomainMedii, TestControlNota
 
 def main():
-    
-    #unittest.main()
+
+    unittest.main()
     instanta_testare = Teste()
     instanta_testare.ruleaza_toate_testele()
     student_repo = StudentRepoFisiere("studenti.txt")

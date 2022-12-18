@@ -191,7 +191,7 @@ class ServiceNota:
         lista_note = self.REPO_Note.get_list()
         note = []
         for nota in lista_note:
-            numele_student = self.REPO_Studenti.cauta_id_student_repo().get_nume()
+            numele_student = self.REPO_Studenti.cauta_id_student_repo(nota.get_id_student()).get_nume()
             if numele_student[0].lower() == litera:
                 note.append(int(nota.get_valoare()))
         if note == []:

@@ -75,7 +75,9 @@ class DisciplinaRepoFisiere(DisciplinaRepo):
 
        self.__path =path
        self.__load_from_file()
-    
+    def empty(self):
+        self.__lista = {}
+        self.__store_in_file()    
     def get_list(self):
         self.__load_from_file()
         return DisciplinaRepo.get_list(self)

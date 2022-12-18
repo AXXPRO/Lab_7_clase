@@ -10,9 +10,9 @@ class Medii:
 
     def __eq__(self, other):
         equal = True
-        if self.get_nume() == other.get_nume():
+        if self.get_nume() != other.get_nume():
             equal = False
-        if self.get_medie() == other.get_medie():
+        if (self.get_medie() - other.get_medie()>0.00001 ):
             equal = False
         return equal
     def __str__(self):

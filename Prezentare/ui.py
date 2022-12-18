@@ -344,11 +344,13 @@ class UI:
             int(self.__params[0])
             int(self.__params[1])
             int(self.__params[2])
+            float(self.__params[3])
         except ValueError:
             raise ParamsError("Id invalid!\n")
         self.__params[0] = int(self.__params[0])
         self.__params[1] = int(self.__params[1])
         self.__params[2] = int(self.__params[2])
+        self.__params[3] = float(self.__params[3])
         self.__ServiceNota.adaugare_nota_service(self.__params)
 
     def sterge_nota_id_ui(self):

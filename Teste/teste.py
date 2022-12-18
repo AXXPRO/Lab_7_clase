@@ -103,25 +103,25 @@ class Teste:
 
 
 
-    # def __test_validare_nota(self):
-    #     self.__id_valid = 0
-    #     self.__valoare_valid = 7
-    #     self.__student_valid = Student(0, "Marius")
-    #     self.__disciplina_valid = Disciplina(0, "Mate", "Cotfas")
-    #     self.__prima_nota = Nota(self.__id_valid, self.__student_valid, self.__disciplina_valid, self.__valoare_valid)
-    #     self.__valid = ValidareNota(self.__prima_nota)
-    #     self.__valid.is_nota_valid()
+    def __test_validare_nota(self):
+        self.__id_valid = 0
+        self.__valoare_valid = 7
+        self.__student_valid = Student(0, "Marius")
+        self.__disciplina_valid = Disciplina(0, "Mate", "Cotfas")
+        self.__prima_nota = Nota(self.__id_valid, self.__student_valid, self.__disciplina_valid, self.__valoare_valid)
+        self.__valid = ValidareNota(self.__prima_nota)
+        self.__valid.is_nota_valid()
 
 
-    #     self.__id_gresit = -5
-    #     self.__valoare_gresit = "f"
-    #     self.__nota = Nota(self.__id_gresit, self.__student_valid, self.__disciplina_valid, self.__valoare_gresit)
-    #     try:
-    #         self.__valid = ValidareNota(self.__nota)
-    #         self.__valid.is_nota_valid()
-    #         assert False
-    #     except ValidationError as err:
-    #         assert str(err) == "Id invalid!\nNota invalida!\n"
+        self.__id_gresit = -5
+        self.__valoare_gresit = "f"
+        self.__nota = Nota(self.__id_gresit, self.__student_valid, self.__disciplina_valid, self.__valoare_gresit)
+        try:
+            self.__valid = ValidareNota(self.__nota)
+            self.__valid.is_nota_valid()
+            assert False
+        except ValidationError as err:
+            assert str(err) == "Id invalid!\nNota invalida!\n"
 
 
 
@@ -133,9 +133,9 @@ class Teste:
         self.__id_gresit = -5
         self.__nume_gresit = ""
         self.__profesor_gresit = ""
-        self.__disciplina = Disciplina(self.__id_gresit, self.__nume_gresit, self.__profesor_gresit)
+        self.__disciplina_gresita = Disciplina(self.__id_gresit, self.__nume_gresit, self.__profesor_gresit)
         try:
-            self.__valid = ValidareDisciplina(self.__disciplina)
+            self.__valid = ValidareDisciplina(self.__disciplina_gresita)
             self.__valid.is_disciplina_valid()
             assert False
         except ValidationError as err:
@@ -155,7 +155,7 @@ class Teste:
         self.__primul_student_valid = Student(self.__id_valid, self.__nume_valid)
         
         self.__valid = ValidareStudent(self.__primul_student_valid)
-        self.__valid = ValidareStudent(self.__primul_student_valid)
+        self.__valid.is_student_valid()
         
         self.__id_gresit = -5
         self.__nume_gresit = ""
@@ -232,6 +232,7 @@ class Teste:
         self.__lista_discipline = self.__repo_disciplina.get_list()
         assert self.__lista_discipline[0] == self.__prima_disciplina
         assert self.__lista_discipline[1] == self.__a_doua_disciplina
+
 
         self.__disciplina_gasit = self.__repo_disciplina.cauta_id_disciplina_repo(0)
         assert self.__disciplina_gasit == self.__prima_disciplina
@@ -450,6 +451,8 @@ class Teste:
             assert False
         except ValidationError as err:
             assert str(err) == "Id invalid!\nNume invalid!\n" 
+    
+    
     # def __test_statistici(self):
     #     """Functia resposnabila pentru a testa crearea de statistici"""
 
@@ -634,8 +637,8 @@ class Teste:
 
         self.__test_domain_nota()
         print("Teste domain disciplina trecute")
-        # self.__test_validare_nota()
-        # print("Teste de validare note trecute!")
+        self.__test_validare_nota()
+        print("Teste de validare note trecute!")
         self.__test_repo_nota()
         print("Teste repo nota trecute!")
         # self.__test_control_nota()
