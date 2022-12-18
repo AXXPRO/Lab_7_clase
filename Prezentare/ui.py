@@ -416,7 +416,7 @@ class UI:
             raise ParamsError("Id invalid!\n")    
         self.__params[0] = int(self.__params[0]) 
         #CHECK
-        Nota = self.__ServiceNota.cauta_nota_id_service(self.__params[0])
+        Nota = self.__ServiceNota.cauta_nota_id_service(self.__params)
 
 
         print("Studentul",Nota.get_student().get_nume(), "are nota", Nota.get_valoare(),"la", Nota.get_disciplina().get_nume())

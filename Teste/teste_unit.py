@@ -2,14 +2,14 @@ import unittest
 from Business.control import ServiceDisciplina, ServiceNota, ServiceStudent
 from Erori.erori import RepoError, ValidationError
 from Infrastructura.Discipline.domain import Disciplina
-from Infrastructura.Discipline.repo import DisciplinaRepo
+from Infrastructura.Discipline.repo import DisciplinaRepo, DisciplinaRepoFisiere
 from Infrastructura.Medii.domain import Medii
 from Infrastructura.Note.domain import Nota
 from Infrastructura.Note.repo import NotaRepo, NotaRepoFisiere
 from Infrastructura.NoteDTO.domain import NotaDTO
 
 from Infrastructura.Studenti.domain import Student
-from Infrastructura.Studenti.repo import StudentRepo
+from Infrastructura.Studenti.repo import StudentRepo, StudentRepoFisiere
 from Validare.Disciplina import ValidareDisciplina
 from Validare.Note import ValidareNota
 from Validare.Student import ValidareStudent
@@ -381,3 +381,114 @@ class TestControlNota(unittest.TestCase):
         self.assertRaises(RepoError, self.__REPO_Student.cauta_id_student_repo,1)
         self.assertRaises (RepoError, self.__REPO_Disciplina.cauta_id_disciplina_repo,1)
         self.assertRaises(RepoError, self.__REPO_Nota.cauta_id_nota_repo,0)
+    def testStatistici(self):
+        student0 = Student(0, "Marc")
+        student1 = Student(1, "Alex")
+        student2 = Student(2, "Alex")
+        disciplina = Disciplina(0, "Mate", "Delia")
+        self.__REPO_Nota = NotaRepoFisiere("notedto_test.txt")
+        self.__REPO_Student = StudentRepo()
+        self.__REPO_Disciplina = DisciplinaRepo()
+        self.__SERVICE_disciplina = ServiceDisciplina(self.__REPO_Disciplina)
+        self.__SERVICE_student = ServiceStudent(self.__REPO_Student)
+        self.__SERVICE_nota = ServiceNota(self.__REPO_Student, self.__REPO_Disciplina,self.__REPO_Nota)
+
+        self.__SERVICE_student.adaugare_student_service([0, "Marc"])
+        self.__SERVICE_student.adaugare_student_service([1, "Alex"])
+        self.__SERVICE_student.adaugare_student_service([2, "Alex"])
+        self.__SERVICE_disciplina.adaugare_disciplina_service([0, "Mate", "Delia"])
+        self.__nota1 = Nota(0,student0, disciplina, 9)
+        self.__nota2 = Nota(1, student1, disciplina, 8)
+        self.__nota3 = Nota(2, student2, disciplina, 7)
+        self.__SERVICE_nota.adaugare_nota_service([0,0,0,9])
+        self.__SERVICE_nota.adaugare_nota_service([1,1,0,8])
+        self.__SERVICE_nota.adaugare_nota_service([2,2,0,7])
+        lista_ordonata = self.__SERVICE_nota.lista_note_ordonate_service([0])
+        self.assertEqual(lista_ordonata , [self.__nota2, self.__nota3, self.__nota1]) 
+
+        self.__SERVICE_nota.adaugare_nota_service([3,0,0,10])
+        self.__SERVICE_nota.adaugare_nota_service([4,1,0,2])
+        self.__SERVICE_nota.adaugare_nota_service([5,2,0,1])
+        lista = self.__SERVICE_nota.lista_medii_service()
+        self.assertEqual(len(lista) , 1) 
+        self.assertEqual(lista[0].get_nume() , "Marc" ) 
+        self.assertEqual( lista[0].get_medie() , 9.5)
+
+class TestFisier(unittest.TestCase):
+    def setUp(self):
+        self.__REPO_Student = StudentRepoFisiere("studenti_test.txt")
+        self.__REPO_Disciplina = DisciplinaRepoFisiere("discipline_test.txt")
+        self.__REPO_Nota = NotaRepoFisiere("notedto_test.txt")
+
+    def tearDown(self):
+        pass
+    def testFisierStudent(self):
+        self.assertEqual(self.__REPO_Student.size_student_repo() , 3)
+        lista_studenti = self.__REPO_Student.get_list()
+        self.assertEqual(lista_studenti , [Student(0, "stud0"), Student(1, "stud1"), Student(2,"stud2")])
+        self.__student_nou = Student(3, "stud3")
+        self.__REPO_Student.adauga_student_repo(self.__student_nou)
+        self.assertEqual( self.__REPO_Student.size_student_repo() , 4)
+        self.__student_gasit = self.__REPO_Student.cauta_id_student_repo(2)
+        self.assertEqual( self.__student_gasit , Student(2, "stud2"))
+        self.assertRaises(RepoError, self.__REPO_Student.cauta_id_student_repo,4)
+
+        self.__student_modificat = Student(0, "stud0modificat")
+        self.__REPO_Student.modificare_id_student_repo(0, self.__student_modificat)
+        self.assertEqual( self.__REPO_Student.cauta_id_student_repo(0) , self.__student_modificat)
+
+        student_modificat = Student(0, "stud0")
+        self.__REPO_Student.modificare_id_student_repo(0, student_modificat)
+        self.assertEqual( self.__REPO_Student.cauta_id_student_repo(0) , Student(0, "stud0"))
+
+        self.__REPO_Student.delete_id_student_repo(3)
+        self.assertEqual( self.__REPO_Student.size_student_repo() , 3)
+    def testFisierDisciplina(self):
+        self.assertEqual(self.__REPO_Disciplina.size_disciplina_repo() , 3)
+        lista_disciplinai = self.__REPO_Disciplina.get_list()
+        self.assertEqual( lista_disciplinai , [Disciplina(0, "nume0","prof0"), Disciplina(1, "nume1","prof1"), Disciplina(2, "nume2","prof2")])
+        disciplina_nou = Disciplina(3, "nume3","prof3")
+        self.__REPO_Disciplina.adauga_disciplina_repo(disciplina_nou)
+        self.assertEqual( self.__REPO_Disciplina.size_disciplina_repo() , 4)
+        self.__disciplina_gasit = self.__REPO_Disciplina.cauta_id_disciplina_repo(2)
+        self.assertEqual(self.__disciplina_gasit , Disciplina(2, "nume2","prof2"))
+        self.assertRaises(RepoError, self.__REPO_Disciplina.cauta_id_disciplina_repo,4)
+        self.__disciplina_modificat = Disciplina(0, "nume0modificat","prof0modificat")
+        self.__REPO_Disciplina.modificare_id_disciplina_repo(0, self.__disciplina_modificat)
+        self.assertEqual (self.__REPO_Disciplina.cauta_id_disciplina_repo(0) , self.__disciplina_modificat)
+        self.__disciplina_modificat = Disciplina(0, "nume0", "prof0")
+        self.__REPO_Disciplina.modificare_id_disciplina_repo(0, self.__disciplina_modificat)
+        self.assertEqual( self.__REPO_Disciplina.cauta_id_disciplina_repo(0) , Disciplina(0, "nume0", "prof0"))
+        self.__REPO_Disciplina.delete_id_disciplina_repo(3)
+        self.assertEqual( self.__REPO_Disciplina.size_disciplina_repo() , 3)
+    
+    def testFisierNota(self):
+        self.__REPO_Student.adauga_student_repo(Student(3,"stud3"))
+        self.__REPO_Disciplina.adauga_disciplina_repo(Disciplina(3,"nume3","prof3"))
+        self.assertEqual( self.__REPO_Nota.size_nota_repo() , 0)
+        self.__REPO_Nota.adauga_nota_repo(NotaDTO(0,0,0,10))
+        self.__REPO_Nota.adauga_nota_repo(NotaDTO(1,1,1,9))
+        self.__REPO_Nota.adauga_nota_repo(NotaDTO(2,2,2,8))
+        self.assertEqual( self.__REPO_Nota.size_nota_repo() ,3)
+        lista_notai = self.__REPO_Nota.get_list()
+        self.assertEqual(lista_notai , [NotaDTO(0,0,0,10), NotaDTO(1,1,1,9), NotaDTO(2,2,2,8)])
+        self.__nota_nou = NotaDTO(3,3,3,7)
+        self.__REPO_Nota.adauga_nota_repo(self.__nota_nou)
+        self.assertEqual( self.__REPO_Nota.size_nota_repo() , 4)
+        self.__nota_gasit = self.__REPO_Nota.cauta_id_nota_repo(2)
+        self.assertEqual(self.__nota_gasit , NotaDTO(2,2,2,8)) 
+        self.assertRaises(RepoError, self.__REPO_Nota.cauta_id_nota_repo,4)
+        self.__nota_modificat = NotaDTO(0,1,1,1)
+        self.__REPO_Nota.modificare_id_nota_repo(0, self.__nota_modificat)
+        self.assertEqual( self.__REPO_Nota.cauta_id_nota_repo(0) , self.__nota_modificat)
+        self.__nota_modificat = NotaDTO(0,0,0,1)
+        self.__REPO_Nota.modificare_id_nota_repo(0, self.__nota_modificat)
+        self.assertEqual( self.__REPO_Nota.cauta_id_nota_repo(0) ,self.__nota_modificat)
+        self.__REPO_Nota.delete_id_nota_repo(3)
+        self.assertEqual( self.__REPO_Nota.size_nota_repo() , 3)
+        self.__REPO_Student.delete_id_student_repo(3)
+        self.assertEqual(self.__REPO_Student.size_student_repo(), 3)
+        self.__REPO_Disciplina.delete_id_disciplina_repo(3)
+        self.assertEqual(self.__REPO_Disciplina.size_disciplina_repo(), 3)
+
+        self.__REPO_Nota.empty()

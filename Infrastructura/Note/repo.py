@@ -136,7 +136,7 @@ class NotaRepoFisiere():
             nota_params = nota_impachetat.split(";")
 
 
-            self.__lista_note[int(nota_params[0])] = NotaDTO(int(nota_params[0]),int(nota_params[1]),int(nota_params[2]),int(nota_params[3]))
+            self.__lista_note[int(nota_params[0])] = NotaDTO(int(nota_params[0]),int(nota_params[1]),int(nota_params[2]),float(nota_params[3]))
 
 
             nota_impachetat = fisier_note.readline()

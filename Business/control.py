@@ -254,10 +254,18 @@ class ServiceNota:
 
         lista_neordonata = self.__lista_note_neordonate_service(self.__id)
 
-        ###aici o ordonezi
-        lista_neordonata.sort(key = lambda x:(x.get_student().get_nume(), -int(x.get_valoare())))
+        
 
-        return lista_neordonata
+        ###aici o ordonezi
+        lista_neordonata.sort(key = lambda x:(self.REPO_Studenti.cauta_id_student_repo(x.get_id_student()).get_nume(), -int(x.get_valoare())))
+        lista_returnat = []
+
+        for notaDTO in lista_neordonata:
+            studentul =  self.REPO_Studenti.cauta_id_student_repo(notaDTO.get_id_student())   
+            disciplina = self.REPO_Discipline.cauta_id_disciplina_repo(notaDTO.get_id_disciplina()) 
+            nota = Nota(notaDTO.get_id_nota(), studentul , disciplina, notaDTO.get_valoare() )
+            lista_returnat.append(nota)
+        return lista_returnat
 
 
     def sterge_disciplina_id_service(self, params):
