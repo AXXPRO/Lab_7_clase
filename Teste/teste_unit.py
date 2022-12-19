@@ -492,3 +492,36 @@ class TestFisier(unittest.TestCase):
         self.assertEqual(self.__REPO_Disciplina.size_disciplina_repo(), 3)
 
         self.__REPO_Nota.empty()
+
+
+
+
+class TestRecursiv(unittest.TestCase):
+    def setUp(self):
+        self.__REPO_Studenti = StudentRepo()
+        self.__REPO_Discipline = DisciplinaRepo()
+        self.__REPO_Note = NotaRepoFisiere("notedto_test.txt")
+        self.__SERVICE_Studenti = ServiceStudent(self.__REPO_Studenti)
+        self.__SERVICE_Note =  ServiceNota(self.__REPO_Studenti, self.__REPO_Discipline, self.__REPO_Note)
+    def tearDown(self):
+        self.__REPO_Note.empty()
+    def testAdaugareStudentiRandom(self):
+        self.assertEqual(self.__REPO_Studenti.size_student_repo() , 0)
+        self.__SERVICE_Studenti.adauga_studenti_random([5])
+        self.assertEqual(self.__REPO_Studenti.size_student_repo() , 5)
+    def testMedieLitera(self):
+        self.__REPO_Studenti.adauga_student_repo(Student(0, "Mariu"))
+        self.__REPO_Studenti.adauga_student_repo(Student(1, "Mirel"))
+        self.__REPO_Studenti.adauga_student_repo(Student(2, "Meliodas"))
+        self.__REPO_Studenti.adauga_student_repo(Student(3, "George"))
+        self.__REPO_Studenti.adauga_student_repo(Student(4, "Cazan"))
+        self.__REPO_Discipline.adauga_disciplina_repo(Disciplina(0, "Mate", "Delia"))
+        self.__REPO_Note.adauga_nota_repo(NotaDTO(0,0,0,10))
+        self.__REPO_Note.adauga_nota_repo(NotaDTO(1,1,0,8))
+        self.__REPO_Note.adauga_nota_repo(NotaDTO(2,2,0,6))
+        self.__REPO_Note.adauga_nota_repo(NotaDTO(3,3,0,7))
+        self.__REPO_Note.adauga_nota_repo(NotaDTO(4,4,0,8))
+        medie = self.__SERVICE_Note.medie_litera_service("m")
+        self.assertAlmostEqual(medie[0], 8)
+
+

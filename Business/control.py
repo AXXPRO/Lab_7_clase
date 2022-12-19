@@ -1,3 +1,4 @@
+from Business.Functii_sortare.sorters import shellSort, sortare_buble
 from Erori.erori import ParamsError, RepoError
 from Infrastructura.Discipline.domain import Disciplina
 from Infrastructura.Discipline.repo import DisciplinaRepo
@@ -44,16 +45,29 @@ class ServiceStudent:
         for i in range(random.randint(5,16)):
             __nume+=random.choice(string.ascii_lowercase)
         return Student(__id_student, __nume)
+    # def adauga_studenti_random(self, params):
+    #     """
+    #     Functia va adauga un numar dat de studenti random in lista
+    #     """
+    #     __numar_studenti = int(params[0])
+    #     for i in range(0, __numar_studenti):
+    #         __student_random = self.__creaza_student_random_service()
+    #         self.adaugare_student_service([__student_random.get_id(), __student_random.get_nume()])
+
     def adauga_studenti_random(self, params):
         """
         Functia va adauga un numar dat de studenti random in lista
+        RECURSIV
         """
+
         __numar_studenti = int(params[0])
-        for i in range(0, __numar_studenti):
-            __student_random = self.__creaza_student_random_service()
-            self.adaugare_student_service([__student_random.get_id(), __student_random.get_nume()])
+        if __numar_studenti == 0:
+            return
 
-
+        __student_random = self.__creaza_student_random_service()
+        self.adaugare_student_service([__student_random.get_id(), __student_random.get_nume()])
+        params[0] = params[0]-1
+        self.adauga_studenti_random(params)
 
     def adaugare_student_service(self, params):
         """
@@ -182,6 +196,24 @@ class ServiceNota:
         self.REPO_Studenti = student_repo
         self.REPO_Discipline = disciplina_repo
 
+    def __note_cu_litera(self, note, lista_note, litera):
+        """
+        Va returna RECURSIV o lista cu acele note ale caror studenti au numele incepand cu litera
+        note - lista cu acele note ale caror studenti au numele incepand cu litera
+        lista_note - lista tuturor notelor
+        litera - litera ce va trebui verificata
+        """
+
+        
+        if lista_note == []:
+            return
+        nota = lista_note.pop()
+        numele_student = self.REPO_Studenti.cauta_id_student_repo(nota.get_id_student()).get_nume()
+        if numele_student[0].lower() == litera:
+            note.append(int(nota.get_valoare()))
+        self.__note_cu_litera(note, lista_note, litera)
+        return note
+
     def medie_litera_service(self, litera):
         """
         Functia de service ce se va afisa media studentilor al caror nume incepe cu o litera
@@ -189,11 +221,13 @@ class ServiceNota:
         """
         #CHECK
         lista_note = self.REPO_Note.get_list()
-        note = []
-        for nota in lista_note:
-            numele_student = self.REPO_Studenti.cauta_id_student_repo(nota.get_id_student()).get_nume()
-            if numele_student[0].lower() == litera:
-                note.append(int(nota.get_valoare()))
+
+        note = self.__note_cu_litera([], lista_note, litera)
+        # for nota in lista_note:
+
+        #     numele_student = self.REPO_Studenti.cauta_id_student_repo(nota.get_id_student()).get_nume()
+        #     if numele_student[0].lower() == litera:
+        #         note.append(int(nota.get_valoare()))
         if note == []:
             return []
         else:
@@ -239,9 +273,12 @@ class ServiceNota:
             nume_student = self.REPO_Studenti.cauta_id_student_repo(id_student).get_nume()
             medie = sum(situatie_studenti[id_student] ) / len(situatie_studenti[id_student])
             rez.append(Medii(id_student, nume_student, medie))
-        rez.sort(key = lambda x: x.get_medie() ,reverse = True)
-        
-        return rez[:self.__douza_zeci()]
+
+        lista_sortata = shellSort(rez,key = lambda x: x.get_medie() ,reverse = True )
+        #rez.sort(key = lambda x: x.get_medie() ,reverse = True)
+
+
+        return lista_sortata[:self.__douza_zeci()]
 
 
     def lista_note_ordonate_service(self, params):
@@ -254,13 +291,12 @@ class ServiceNota:
 
         lista_neordonata = self.__lista_note_neordonate_service(self.__id)
 
+        lista_ordered = sortare_buble(lista_neordonata, key = lambda x:(self.REPO_Studenti.cauta_id_student_repo(x.get_id_student()).get_nume(), -int(x.get_valoare())) )
         
-
         ###aici o ordonezi
-        lista_neordonata.sort(key = lambda x:(self.REPO_Studenti.cauta_id_student_repo(x.get_id_student()).get_nume(), -int(x.get_valoare())))
+        #lista_neordonata.sort(key = lambda x:(self.REPO_Studenti.cauta_id_student_repo(x.get_id_student()).get_nume(), -int(x.get_valoare())))
         lista_returnat = []
-
-        for notaDTO in lista_neordonata:
+        for notaDTO in lista_ordered:
             studentul =  self.REPO_Studenti.cauta_id_student_repo(notaDTO.get_id_student())   
             disciplina = self.REPO_Discipline.cauta_id_disciplina_repo(notaDTO.get_id_disciplina()) 
             nota = Nota(notaDTO.get_id_nota(), studentul , disciplina, notaDTO.get_valoare() )
