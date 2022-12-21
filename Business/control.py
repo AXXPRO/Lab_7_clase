@@ -239,13 +239,22 @@ class ServiceNota:
         """
         Functia va returna o lista cu toate notele la disciplina cu id-ul dat
         """
+        contor = 0
+        size_lista = self.REPO_Note.size_nota_repo()
+        #print("Numarul de elemente din lista este ", size_lista)
         lista_originala = self.REPO_Note.get_list()
+        contor += size_lista
+
         #CHECK
         lista_de_returnat = []
 
         for nota in lista_originala:
+            contor+=1
             if nota.get_id_disciplina() == id:
+                
                 lista_de_returnat.append(nota)
+        #print("Numarul de operatii executate este ", contor)
+        #input()
         return lista_de_returnat
 
     def __douza_zeci(self):
